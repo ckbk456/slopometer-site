@@ -1,0 +1,1586 @@
+/* Slopometer product page: its own playful identity, separate from the Infinitex brand system.
+   Every effect is CSS or small local JS; all motion stops under prefers-reduced-motion. */
+@import "@fontsource-variable/bricolage-grotesque/standard.css";
+@import "@fontsource-variable/fredoka";
+
+:root {
+  --paper: #fbfdf5;
+  --ink: #2a1636;
+  --gum: #ff8fb1;
+  --muted: #5b4a66;
+  /* Theme contract: src/slopometer-theme.js overrides these six from the app's presets.
+     --l0 empty day, --l1..--l4 activity levels, --slop accent (dark enough for white
+     text), --goo bright accent (readable on --slop and --ink). */
+  --l0: #d4e6fb;
+  --l1: #93c5fd;
+  --l2: #3b82f6;
+  --l3: #4f46e5;
+  --l4: #3730a3;
+  --slop: #3730a3;
+  --goo: #488dff;
+  /* Page tints follow the theme. */
+  --pistachio: color-mix(in oklab, var(--l1) 22%, #fbfdf5);
+  /* Rounded, goopy display face for headings; Bricolage stays for body text. */
+  --display:
+    "Fredoka Variable", "Bricolage Grotesque Variable", system-ui, sans-serif;
+  /* Content is centered at this width; section backgrounds stay full-bleed. */
+  --wrap: 1240px;
+  --gutter: max(clamp(20px, 5vw, 64px), calc((100% - var(--wrap)) / 2));
+  font-family: "Bricolage Grotesque Variable", system-ui, sans-serif;
+  font-synthesis: none;
+  color: var(--ink);
+  background: var(--pistachio);
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body.slop {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.55;
+  overflow-x: clip;
+}
+h1,
+h2,
+h3,
+p,
+ol,
+ul,
+figure {
+  margin: 0;
+}
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+a {
+  color: inherit;
+}
+a:focus-visible,
+button:focus-visible,
+.track:focus-visible {
+  outline: 4px solid var(--gum);
+  outline-offset: 5px;
+}
+/* Display text, numbers and illustrations aren't for selecting; selecting the
+   split jelly letters or tile numbers only paints broken pink blocks. */
+h1,
+h2,
+h3,
+.wordmark,
+.tagline,
+.download,
+.gauge,
+.widget,
+.panel-art,
+.step-n,
+.theme-picker {
+  -webkit-user-select: none;
+  user-select: none;
+}
+::selection {
+  background: var(--gum);
+  color: var(--ink);
+}
+/* The liquid title keeps its fill when selected; only a translucent tint shows. */
+.liquid::selection {
+  background: rgb(255 143 177 / 35%);
+  color: transparent;
+}
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 50;
+  padding: 12px 16px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.skip-link:focus {
+  top: 12px;
+}
+.defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+/* Display type: Fredoka for every heading-like element. */
+h2,
+h3,
+.wordmark,
+.liquid,
+.tagline,
+.marquee span,
+.gauge figcaption strong,
+.widget-head b,
+.step-n {
+  font-family: var(--display);
+}
+h2 {
+  font-size: clamp(36px, 4.4vw, 60px);
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+h3 {
+  font-weight: 600;
+  line-height: 1.1;
+}
+section {
+  position: relative;
+  padding: 72px var(--gutter);
+}
+
+/* Cursor blob: a slop-colored blob trailing the pointer, blurred behind everything.
+   The blur is a filter on the blob's own GPU layer (cheap), not a full-screen
+   backdrop-filter, and JS moves it with transform, never left/top. */
+.blob {
+  position: fixed;
+  z-index: -2;
+  top: 0;
+  left: 0;
+  width: 34vmax;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: linear-gradient(to right, var(--goo), var(--gum));
+  opacity: 0;
+  margin: -17vmax 0 0 -17vmax;
+  filter: blur(9vmax);
+  will-change: transform;
+  animation: blob-spin 18s linear infinite;
+  transition: opacity 600ms;
+}
+.has-pointer .blob {
+  opacity: 0.55;
+}
+@keyframes blob-spin {
+  from {
+    rotate: 0deg;
+  }
+  50% {
+    scale: 1 1.4;
+  }
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* Scroll-driven slop level: a labeled slop-o-meter tube on the right fills as the
+   page scrolls. Wide screens only, so it never covers content. */
+.slop-tube {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  @media (min-width: 1100px) {
+    .slop-tube {
+      display: flex;
+      position: fixed;
+      z-index: 30;
+      right: 16px;
+      top: 50%;
+      translate: 0 -50%;
+      align-items: flex-end;
+      gap: 6px;
+      pointer-events: none;
+    }
+  }
+  .tube-label {
+    writing-mode: vertical-rl;
+    rotate: 180deg;
+    padding: 12px 3px;
+    border: 3px solid var(--ink);
+    border-radius: 999px;
+    background: var(--paper);
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: var(--slop);
+  }
+  .tube-glass {
+    position: relative;
+    width: 28px;
+    height: min(52vh, 480px);
+    border: 3px solid var(--ink);
+    border-radius: 8px 8px 999px 999px;
+    background: var(--paper);
+    overflow: hidden;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .tube-glass::after {
+    /* Tick marks over the slop. */
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 10px;
+    background: repeating-linear-gradient(
+      to top,
+      transparent 0 calc(10% - 3px),
+      var(--ink) calc(10% - 3px) 10%
+    );
+    opacity: 0.55;
+  }
+  .tube-fill {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(var(--goo), var(--slop));
+    transform-origin: bottom;
+    animation: tube-fill linear both;
+    animation-timeline: scroll(root);
+  }
+}
+/* Bottom of the page: the cap blows and the tube shakes while JS sprays drops. */
+.slop-tube.bursting .tube-glass {
+  border-top-color: transparent;
+  animation: tube-rattle 120ms linear infinite;
+}
+.slop-tube.bursting .tube-label {
+  /* Translate only: the label's own rotate keeps it upright-sideways. */
+  animation: label-rattle 160ms linear infinite;
+}
+@keyframes label-rattle {
+  50% {
+    translate: -2px 1px;
+  }
+}
+@keyframes tube-rattle {
+  50% {
+    translate: 2px -1px;
+    rotate: 1.5deg;
+  }
+}
+.spew {
+  position: fixed;
+  z-index: 31;
+  width: var(--size);
+  aspect-ratio: 1;
+  border-radius: 50% 45% 55% 40%;
+  background: var(--slop);
+  pointer-events: none;
+  translate: -50% -50%;
+}
+.spew:nth-of-type(odd) {
+  background: var(--goo);
+}
+.slop-puddle {
+  position: fixed;
+  z-index: 29;
+  right: -40px;
+  bottom: -30px;
+  width: 520px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 70% 60%,
+    var(--slop) 40%,
+    color-mix(in oklab, var(--slop) 70%, transparent) 70%,
+    transparent 72%
+  );
+  scale: 0 0.2;
+  transform-origin: 80% 100%;
+  transition: scale 2.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+.slop-puddle.filling {
+  scale: 1;
+}
+@keyframes tube-fill {
+  from {
+    scale: 1 0;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+/* Navigation */
+.slop-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 12px var(--gutter);
+  background: color-mix(in oklab, var(--pistachio) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(1.4);
+}
+.wordmark {
+  font-size: 28px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--slop);
+  font-variant-numeric: tabular-nums;
+}
+.slop-nav nav {
+  display: flex;
+  gap: 28px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.slop-nav nav a {
+  text-decoration: none;
+  background: linear-gradient(var(--gum), var(--gum)) no-repeat 0 100% / 0 4px;
+  transition: background-size 250ms;
+}
+.slop-nav nav a:hover {
+  background-size: 100% 4px;
+}
+.slop-nav .by {
+  color: var(--muted);
+  font-weight: 450;
+}
+
+/* Hero */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(32px, 4vw, 64px);
+  padding-block: 48px 128px;
+}
+.hero-copy {
+  min-width: 0;
+}
+
+/* Liquid title: slop sloshes inside the stroked letters and rises on load.
+   The fill is a ::before copy of the text in var(--slop), cut by a wave mask,
+   so it follows the theme; the h1 itself only draws the outline. */
+.liquid {
+  position: relative;
+  isolation: isolate;
+  /* Sized so the ~5.1em-wide word fits its hero column and never wraps, so the
+     ::before fill copy lines up with the outline letter for letter. (Not container
+     units: a size container on the column clips the fill's descenders.) */
+  font-size: clamp(44px, 8.4vw, 120px);
+  white-space: nowrap;
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  color: transparent;
+  -webkit-text-stroke: clamp(2px, 0.25vw, 3.5px) var(--ink);
+}
+.liquid::before {
+  content: attr(data-text) / "";
+  position: absolute;
+  /* A little larger than the line box so the mask covers descenders (the p's tail)
+     and any overhang on the right. The text itself stays anchored top-left. */
+  inset: 0 -0.5em -0.35em 0;
+  z-index: -1;
+  color: var(--slop);
+  -webkit-text-stroke: 0;
+  /* Two mask layers: a thin wave strip for the surface and a solid block below it,
+     so the fill reaches every descender regardless of the line box. */
+  -webkit-mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 60' preserveAspectRatio='none'%3E%3Cpath d='M0 30 Q50 0 100 30 T200 30 T300 30 T400 30 V60 H0Z'/%3E%3C/svg%3E")
+      0 0.42em / 2em 0.3em repeat-x,
+    linear-gradient(#000, #000) 0 0.71em / 100% 100% no-repeat;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 60' preserveAspectRatio='none'%3E%3Cpath d='M0 30 Q50 0 100 30 T200 30 T300 30 T400 30 V60 H0Z'/%3E%3C/svg%3E")
+      0 0.42em / 2em 0.3em repeat-x,
+    linear-gradient(#000, #000) 0 0.71em / 100% 100% no-repeat;
+  animation:
+    slosh 2.6s linear infinite,
+    fill-up 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  pointer-events: none;
+}
+@keyframes slosh {
+  to {
+    -webkit-mask-position-x: 2em, 0;
+    mask-position-x: 2em, 0;
+  }
+}
+@keyframes fill-up {
+  from {
+    -webkit-mask-position-y: 1.3em, 1.59em;
+    mask-position-y: 1.3em, 1.59em;
+  }
+}
+.liquid::after {
+  /* Specular highlight sliding across the glass letters. */
+  content: attr(data-text) / "";
+  position: absolute;
+  inset: 0;
+  -webkit-text-stroke: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 40%,
+    rgb(255 255 255 / 55%) 50%,
+    transparent 60%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: glint 5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes glint {
+  from {
+    background-position: 100% 0;
+  }
+  60%,
+  to {
+    background-position: 0 0;
+  }
+}
+
+/* Sparkle tagline: a shifting gradient with stars that pop in around it. */
+.tagline {
+  margin-top: 16px;
+  font-size: clamp(26px, 3vw, 42px);
+  font-weight: 600;
+  line-height: 1.1;
+}
+.sparkle-text {
+  position: relative;
+  display: inline-block;
+}
+.sparkle-text .grad {
+  background: linear-gradient(
+    to right,
+    var(--slop),
+    var(--gum),
+    #8a5cf6,
+    var(--goo),
+    var(--slop)
+  );
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: grad-pan 4s linear infinite;
+}
+@keyframes grad-pan {
+  to {
+    background-position: -200% 0;
+  }
+}
+.star {
+  position: absolute;
+  width: clamp(16px, 2vw, 26px);
+  translate: -50% -50%;
+  pointer-events: none;
+  animation: star-pop 900ms ease forwards;
+}
+.star svg {
+  display: block;
+  width: 100%;
+  fill: var(--gum);
+  animation: star-spin 1000ms linear infinite;
+}
+.star:nth-child(odd) svg {
+  fill: var(--goo);
+}
+@keyframes star-pop {
+  from,
+  to {
+    scale: 0;
+  }
+  50% {
+    scale: 1;
+  }
+}
+@keyframes star-spin {
+  to {
+    rotate: 180deg;
+  }
+}
+.lede {
+  max-width: 36ch;
+  margin-top: 16px;
+  font-size: 21px;
+  color: var(--muted);
+}
+
+/* Magnetic download button with a slop splat on click. */
+.magnet {
+  display: inline-block;
+  margin: 12px -24px -8px;
+  padding: 24px;
+}
+.download {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 22px 34px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 22px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 0 var(--slop);
+  translate: var(--mx, 0) var(--my, 0);
+  transition:
+    translate 450ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 150ms,
+    background 150ms;
+  overflow: visible;
+}
+.download span {
+  translate: calc(var(--mx, 0) * 0.4) calc(var(--my, 0) * 0.4);
+  transition: translate 450ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.download:hover {
+  background: var(--slop);
+  box-shadow: 0 8px 0 var(--ink);
+}
+.download:active {
+  box-shadow: 0 2px 0 var(--ink);
+  translate: var(--mx, 0) calc(var(--my, 0) + 6px);
+}
+.splat {
+  position: fixed;
+  z-index: 60;
+  width: var(--size);
+  aspect-ratio: 1;
+  border-radius: 50% 40% 55% 45%;
+  background: var(--c);
+  pointer-events: none;
+  translate: -50% -50%;
+  animation: splat 800ms cubic-bezier(0.2, 0.7, 0.4, 1) forwards;
+}
+@keyframes splat {
+  to {
+    transform: translate(var(--dx), var(--dy)) scale(0.2);
+    opacity: 0;
+  }
+}
+.meta {
+  max-width: 38ch;
+  margin-top: 10px;
+  font-size: 16px;
+  color: var(--muted);
+}
+
+/* Gauge: needle swings in on load; tapping the glass makes it wobble. */
+.gauge {
+  justify-self: center;
+  width: min(540px, 100%);
+  text-align: center;
+}
+.gauge-glass {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 18px 18px 0;
+  border: 4px solid var(--ink);
+  border-bottom-width: 10px;
+  border-radius: 999px 999px 32px 32px;
+  background: radial-gradient(
+    circle at 30% 20%,
+    #fff 0,
+    var(--paper) 40%,
+    color-mix(in oklab, var(--l0) 45%, var(--paper)) 100%
+  );
+  cursor: pointer;
+  box-shadow:
+    inset 0 -14px 30px rgb(42 22 54 / 10%),
+    0 24px 50px -24px rgb(42 22 54 / 50%);
+}
+.gauge-glass svg {
+  display: block;
+  width: 100%;
+}
+.dial-face {
+  fill: transparent;
+}
+.dial-zone {
+  /* Arc from 0 to the current count; pathLength is 69 in the markup. */
+  fill: none;
+  stroke: var(--goo);
+  stroke-width: 26;
+  stroke-dasharray: var(--v, 0) 69;
+  opacity: 0.5;
+  transition: stroke-dasharray 1s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.dial-ticks line {
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.dial-ticks line.major {
+  stroke-width: 5;
+}
+.dial-ticks text {
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  text-anchor: middle;
+  fill: var(--ink);
+}
+/* JS sets --angle from the count (0 to 69 maps to -90deg to 90deg); the springy
+   curve overshoots and settles like a real needle. */
+.needle {
+  fill: var(--gum);
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  transform-box: view-box;
+  transform-origin: 200px 200px;
+  rotate: var(--angle, -90deg);
+  transition: rotate 1.1s cubic-bezier(0.3, 1.7, 0.45, 1);
+}
+.needle circle {
+  fill: var(--ink);
+}
+.gauge-glass.tapped {
+  animation: glass-bump 300ms;
+}
+.gauge-glass.pegged {
+  animation: glass-shake 500ms 400ms;
+}
+@keyframes glass-bump {
+  40% {
+    scale: 0.97 1.02;
+  }
+}
+@keyframes glass-shake {
+  20%,
+  60% {
+    translate: -6px 0;
+  }
+  40%,
+  80% {
+    translate: 6px 0;
+  }
+}
+/* Over-revving past 69: --heat runs 0 to 1 on the way to 420. The glass shakes
+   faster and wider, glows hot, and the needle buzzes against the end stop. */
+.gauge-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at 50% 85%,
+    rgb(255 70 40 / 70%),
+    rgb(255 140 60 / 25%) 45%,
+    transparent 75%
+  );
+  opacity: var(--heat, 0);
+  pointer-events: none;
+  transition: opacity 400ms;
+}
+/* Over pressure: the glass swells and squashes like a cartoon boiler while the
+   #warp displacement filter ripples its outline, harder as --heat rises. */
+.gauge-glass.overrev {
+  --amp: calc(2 + var(--heat) * 12);
+  filter: url(#warp);
+  animation:
+    rev-shake calc(0.24s - var(--heat) * 0.17s) linear infinite,
+    rev-bulge calc(0.7s - var(--heat) * 0.45s) ease-in-out infinite;
+}
+.gauge-glass.overrev.tapped {
+  animation:
+    glass-bump 300ms,
+    rev-shake calc(0.24s - var(--heat) * 0.17s) linear infinite,
+    rev-bulge calc(0.7s - var(--heat) * 0.45s) ease-in-out infinite;
+}
+@keyframes rev-bulge {
+  0%,
+  100% {
+    scale: calc(1 + var(--heat) * 0.06) calc(1 + var(--heat) * 0.04);
+    transform: skew(0deg, 0deg);
+  }
+  30% {
+    scale: calc(1 + var(--heat) * 0.16) calc(1 - var(--heat) * 0.08);
+    transform: skew(calc(var(--heat) * 4deg), 0deg);
+  }
+  60% {
+    scale: calc(1 - var(--heat) * 0.05) calc(1 + var(--heat) * 0.18);
+    transform: skew(calc(var(--heat) * -3deg), calc(var(--heat) * 2deg));
+  }
+}
+.gauge-glass.overrev .needle {
+  animation: needle-buzz 90ms linear infinite alternate;
+}
+.gauge-glass.overrev .dial-zone {
+  stroke: color-mix(in oklab, var(--goo), #ff4d2e calc(var(--heat) * 100%));
+  opacity: calc(0.5 + var(--heat) * 0.5);
+}
+@keyframes rev-shake {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  25% {
+    translate: calc(var(--amp) * -1px) calc(var(--amp) * 0.4px);
+    rotate: calc(var(--amp) * -0.15deg);
+  }
+  50% {
+    translate: calc(var(--amp) * 0.8px) calc(var(--amp) * -0.5px);
+    rotate: calc(var(--amp) * 0.12deg);
+  }
+  75% {
+    translate: calc(var(--amp) * -0.5px) calc(var(--amp) * -0.3px);
+    rotate: calc(var(--amp) * 0.1deg);
+  }
+}
+@keyframes needle-buzz {
+  from {
+    rotate: calc(var(--angle) - 4deg);
+  }
+  to {
+    rotate: calc(var(--angle) + 3deg);
+  }
+}
+/* 420: the glass pops. */
+.gauge-glass.burst {
+  animation: glass-pop 450ms cubic-bezier(0.3, 1.8, 0.6, 1) forwards;
+  cursor: default;
+}
+@keyframes glass-pop {
+  30% {
+    scale: 1.18 1.12;
+    opacity: 1;
+  }
+  100% {
+    scale: 0.2;
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.puff,
+.shard {
+  position: fixed;
+  z-index: 60;
+  width: var(--size);
+  aspect-ratio: 1;
+  pointer-events: none;
+  translate: -50% -50%;
+}
+.puff {
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, rgb(255 255 255 / 0) 70%);
+  animation: puff 1.2s ease-out forwards;
+}
+@keyframes puff {
+  to {
+    transform: translate(var(--dx), var(--dy)) scale(3);
+    opacity: 0;
+  }
+}
+.shard {
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  clip-path: polygon(50% 0, 100% 70%, 20% 100%);
+  animation: shard 1.3s cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
+}
+.shard:nth-of-type(3n) {
+  background: var(--gum);
+}
+.shard:nth-of-type(3n + 1) {
+  background: var(--slop);
+}
+@keyframes shard {
+  to {
+    transform: translate(var(--dx), calc(var(--dy) + 260px)) rotate(var(--spin));
+    opacity: 0;
+  }
+}
+.gauge figcaption {
+  margin-top: 16px;
+  font-size: 20px;
+  font-weight: 600;
+}
+.gauge figcaption strong {
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--slop);
+}
+.gauge figcaption [data-count-label] {
+  display: block;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* The count grows with the heat, then runs away after the burst: blurry random
+   digits stream past the edge of the screen (on purpose). */
+.gauge figcaption strong {
+  display: inline-block;
+  scale: calc(1 + var(--heat, 0) * 0.6);
+  color: color-mix(in oklab, var(--slop), #ff4d2e calc(var(--heat, 0) * 100%));
+  transition: scale 300ms cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.gauge figcaption.runaway {
+  text-align: left;
+  white-space: nowrap;
+}
+.gauge figcaption.runaway strong {
+  scale: 1.6;
+  transform-origin: left center;
+  /* A static red/blue ghost: animating blur or shadows on a number several screens
+     wide repaints all of it every frame. The motion comes from the digits. */
+  text-shadow:
+    3px 0 rgb(255 0 80 / 45%),
+    -3px 0 rgb(0 120 255 / 40%);
+}
+.gauge figcaption.runaway strong span {
+  display: inline-block;
+}
+.gauge figcaption.runaway {
+  will-change: transform;
+  animation: runaway-quake 70ms linear infinite;
+}
+@keyframes runaway-quake {
+  25% {
+    translate: -5px 3px;
+  }
+  50% {
+    translate: 4px -4px;
+  }
+  75% {
+    translate: -3px -2px;
+  }
+}
+
+/* Gooey drips merging into the marquee band below. */
+.drips {
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 100px;
+  fill: var(--slop);
+  overflow: visible;
+}
+.drip {
+  animation: drip 3.6s ease-in infinite;
+}
+.d2 {
+  animation-delay: -1.1s;
+  animation-duration: 4.2s;
+}
+.d3 {
+  animation-delay: -2.3s;
+  animation-duration: 3.2s;
+}
+.d4 {
+  animation-delay: -0.6s;
+  animation-duration: 4.8s;
+}
+.d5 {
+  animation-delay: -1.8s;
+  animation-duration: 3.9s;
+}
+@keyframes drip {
+  0%,
+  100% {
+    translate: 0 30px;
+  }
+  50% {
+    translate: 0 -40px;
+  }
+}
+
+/* Infinite marquees: two flat rows sliding in opposite directions. Rows are not rotated,
+   so they never drift into each other, and each row holds two identical copies with
+   uniform trailing spacing, so the -50% loop point is seamless. */
+.marquee {
+  display: grid;
+  gap: 4px;
+  padding-block: 22px 26px;
+  background: var(--slop);
+  color: var(--paper);
+  overflow: hidden;
+  user-select: none;
+}
+.marquee-row {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+.marquee-row.reverse {
+  animation-direction: reverse;
+  animation-duration: 38s;
+  color: var(--goo);
+}
+.marquee p {
+  display: flex;
+  flex: none;
+}
+.marquee span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding-right: 0.45em;
+  font-family: var(--display, inherit);
+  font-size: clamp(28px, 4vw, 56px);
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.marquee-row.reverse span {
+  font-style: italic;
+  font-size: clamp(22px, 3vw, 40px);
+}
+.marquee span::after {
+  content: "";
+  flex: none;
+  width: 0.42em;
+  aspect-ratio: 1;
+  border-radius: 50% 40% 55% 45%;
+  background: var(--gum);
+}
+@keyframes marquee {
+  to {
+    translate: -50% 0;
+  }
+}
+
+/* Slop tray: ripple grid inside a 3D-tilting widget. */
+.tray {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 40px 64px;
+}
+.tray-copy p {
+  max-width: 40ch;
+  margin-top: 18px;
+  font-size: 20px;
+  color: var(--muted);
+}
+.theme-picker {
+  margin-top: 10px;
+  max-width: 100%;
+}
+.theme-picker:empty {
+  display: none;
+}
+.tilt {
+  justify-self: center;
+  width: min(360px, 100%);
+  perspective: 900px;
+}
+/* The app's large widget (Shared/WidgetContent.swift): today's count and its unit, a
+   weekday row with today's label bold, five calendar weeks of numbered tiles (Sunday
+   first, the current week last, later days empty), and the sync and window footer.
+   The ink frame and shadow are the page's; the spacing inside follows the widget. */
+.widget {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  border-radius: 28px;
+  background: var(--paper);
+  border: 4px solid var(--ink);
+  box-shadow: 14px 14px 0 var(--ink);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.widget-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--muted);
+  transform: translateZ(30px);
+}
+.widget-head b {
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.widget-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: -5px;
+  font-size: 11px;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--muted);
+  transform: translateZ(40px);
+}
+.widget-days .is-today {
+  font-weight: 700;
+  color: var(--ink);
+}
+.widget-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 1.2;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transform: translateZ(30px);
+}
+.ripple-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  transform: translateZ(50px);
+  transform-style: preserve-3d;
+}
+/* DayTile: 6pt corners, rounded semibold count, white or black, whichever reads
+   better on the fill (the fallback guesses by level). */
+.tile {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 7px;
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  background: var(--l0);
+  transition:
+    scale 200ms,
+    translate 200ms;
+  cursor: pointer;
+}
+.tile.l1 {
+  background: var(--l1);
+  color: #000;
+}
+.tile.l2 {
+  background: var(--l2);
+  color: #000;
+}
+.tile.l3 {
+  background: var(--l3);
+  color: #fff;
+}
+.tile.l4 {
+  background: var(--l4);
+  color: #fff;
+}
+@supports (color: oklch(from red l c h)) {
+  .tile.l1 {
+    color: oklch(from var(--l1) clamp(0, (0.565 - l) * 1000, 1) 0 0);
+  }
+  .tile.l2 {
+    color: oklch(from var(--l2) clamp(0, (0.565 - l) * 1000, 1) 0 0);
+  }
+  .tile.l3 {
+    color: oklch(from var(--l3) clamp(0, (0.565 - l) * 1000, 1) 0 0);
+  }
+  .tile.l4 {
+    color: oklch(from var(--l4) clamp(0, (0.565 - l) * 1000, 1) 0 0);
+  }
+}
+/* Today is still in progress: a thin primary outline inside the tile. */
+.tile.today {
+  box-shadow: inset 0 0 0 1.5px rgb(42 22 54 / 60%);
+}
+.tile.future {
+  background: transparent;
+}
+.tile:hover {
+  scale: 1.18;
+  translate: 0 -4px;
+}
+.tile.ripple {
+  animation: ripple 700ms cubic-bezier(0.3, 1.5, 0.5, 1) var(--delay) both;
+}
+@keyframes ripple {
+  35% {
+    scale: 0.55;
+    background: var(--gum);
+    color: var(--ink);
+    border-radius: 50%;
+  }
+}
+.shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  background: radial-gradient(
+    circle at var(--sx, 50%) var(--sy, 0%),
+    rgb(255 255 255 / 55%),
+    transparent 55%
+  );
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* Image track: the whole section is the drag surface; JS moves the track and pans
+   each chart inside its frame. touch-action keeps vertical page scrolling on touch. */
+.views {
+  padding-inline: 0;
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+.views.dragging {
+  cursor: grabbing;
+}
+.views-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px 40px;
+  padding-inline: var(--gutter);
+  margin-bottom: 28px;
+}
+.track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  padding: 10px var(--gutter) 16px;
+  will-change: transform;
+}
+.panel {
+  flex: 0 0 min(380px, 78vw);
+}
+.panel-art {
+  aspect-ratio: 16 / 10;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  border: 4px solid var(--ink);
+  border-radius: 28px;
+  background: var(--paper);
+  overflow: hidden;
+}
+/* Wider than the frame so it can pan. Charts without text pan farther; the quota and
+   menu bar art keep their labels inside the always-visible middle. */
+.panel-art svg {
+  width: 108%;
+  max-width: none;
+  will-change: transform;
+}
+.panel:nth-child(-n + 3) .panel-art svg {
+  width: 135%;
+}
+.panel:nth-child(odd) .panel-art {
+  rotate: -1.5deg;
+}
+.panel:nth-child(even) .panel-art {
+  rotate: 1.2deg;
+  background: color-mix(in oklab, var(--l0) 30%, var(--paper));
+}
+.panel h3 {
+  margin-top: 18px;
+  font-size: 24px;
+}
+.panel p {
+  font-size: 17px;
+  color: var(--muted);
+}
+/* Panel SVG text, sized like the app's quota card and menu bar panel. Counts use the
+   rounded display face, as the app uses SF Rounded. */
+.panel-art text {
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  fill: var(--muted);
+}
+.panel-art .q-num,
+.panel-art .q-den,
+.panel-art .m-big,
+.panel-art .m-tile {
+  font-family: var(--display);
+}
+.panel-art .q-num {
+  font-size: 36px;
+  font-weight: 600;
+  fill: var(--ink);
+}
+.panel-art .q-den {
+  font-size: 18px;
+  font-weight: 500;
+}
+.panel-art .q-title {
+  font-size: 11.5px;
+  font-weight: 650;
+  fill: var(--ink);
+}
+.panel-art .q-sub,
+.panel-art .q-status {
+  font-size: 9.5px;
+}
+.panel-art .q-status,
+.panel-art .m-clock {
+  text-anchor: end;
+}
+.panel-art .q-link {
+  font-size: 10px;
+  font-weight: 500;
+  fill: var(--slop);
+}
+.panel-art .m-bar {
+  font-size: 11.5px;
+  font-weight: 600;
+  fill: var(--ink);
+}
+.panel-art .m-clock {
+  font-weight: 500;
+}
+.panel-art .m-cap {
+  font-size: 8.5px;
+  font-weight: 650;
+  letter-spacing: 0.8px;
+}
+.panel-art .m-plain {
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.panel-art .m-big {
+  font-size: 32px;
+  font-weight: 600;
+  fill: var(--ink);
+}
+.panel-art .m-sub {
+  font-size: 10.5px;
+}
+.panel-art .m-tile,
+.panel-art .m-day {
+  text-anchor: middle;
+}
+.panel-art .m-tile {
+  font-size: 11px;
+  font-weight: 600;
+}
+.panel-art .m-day {
+  font-size: 8px;
+}
+/* Tile counts: primary on empty days, else white or black, whichever reads better. */
+.panel-art .n0 {
+  fill: var(--ink);
+}
+.panel-art .n1,
+.panel-art .n2 {
+  fill: #000;
+}
+.panel-art .n3,
+.panel-art .n4 {
+  fill: #fff;
+}
+@supports (color: oklch(from red l c h)) {
+  .panel-art .n1 {
+    fill: oklch(from var(--l1) clamp(0, (0.565 - l) * 1000, 1) 0 0);
+  }
+  .panel-art .n2 {
+    fill: oklch(from var(--l2) clamp(0, (0.565 - l) * 1000, 1) 0 0);
+  }
+  .panel-art .n3 {
+    fill: oklch(from var(--l3) clamp(0, (0.565 - l) * 1000, 1) 0 0);
+  }
+  .panel-art .n4 {
+    fill: oklch(from var(--l4) clamp(0, (0.565 - l) * 1000, 1) 0 0);
+  }
+}
+/* Panel SVG fills/strokes: follow the color contract so presets recolor the art. */
+.panel-art .f0 {
+  fill: var(--l0);
+}
+.panel-art .f1 {
+  fill: var(--l1);
+}
+.panel-art .f2 {
+  fill: var(--l2);
+}
+.panel-art .f3 {
+  fill: var(--l3);
+}
+.panel-art .f4 {
+  fill: var(--l4);
+}
+.panel-art .f-accent {
+  fill: var(--slop);
+}
+.panel-art .f-goo {
+  fill: var(--goo);
+}
+.panel-art .f-ink {
+  fill: var(--ink);
+}
+.panel-art .f-paper {
+  fill: var(--paper);
+}
+.panel-art .s-goo {
+  stroke: var(--goo);
+}
+.panel-art .s-ink {
+  stroke: var(--ink);
+}
+/* App surfaces inside the frames: the quota's card, the menu bar and its panel, the
+   meter track, chart gridlines, today's outline and faded column. The moving average
+   uses the app's trend color, which every preset shares. */
+.panel-art .f-card {
+  fill: color-mix(in oklab, #fff 70%, var(--paper));
+  stroke: rgb(42 22 54 / 12%);
+}
+.panel-art .f-window {
+  fill: color-mix(in oklab, var(--ink) 4%, #fff);
+  stroke: rgb(42 22 54 / 16%);
+}
+.panel-art .f-bar {
+  fill: color-mix(in oklab, var(--ink) 8%, var(--paper));
+}
+.panel-art .f-hl {
+  fill: rgb(42 22 54 / 13%);
+}
+.panel-art .f-track {
+  fill: rgb(91 74 102 / 18%);
+}
+.panel-art .s-grid {
+  stroke: rgb(91 74 102 / 22%);
+  stroke-width: 1;
+}
+.panel-art .s-muted {
+  stroke: var(--muted);
+  stroke-width: 1.2;
+}
+.panel-art .s-accent {
+  stroke: var(--slop);
+}
+.panel-art .s-trend {
+  stroke: #8a5c00;
+}
+.panel-art .s-today {
+  stroke: rgb(42 22 54 / 60%);
+  stroke-width: 1;
+}
+.panel-art .o-today {
+  opacity: 0.4;
+}
+
+/* Get it: install steps and the menu board side by side. */
+.get {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 40px 56px;
+}
+
+/* Install: steps pour in as they scroll into view. */
+.install h2 {
+  margin-bottom: 28px;
+}
+.install ol {
+  display: grid;
+  gap: 12px;
+}
+.install li {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 24px 10px 10px;
+  border: 4px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 19px;
+  line-height: 1.35;
+}
+.install li:nth-child(even) {
+  margin-left: clamp(0px, 3vw, 40px);
+}
+.step-n {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50% 42% 55% 45%;
+  background: var(--slop);
+  color: var(--paper);
+  font-size: 26px;
+  font-weight: 700;
+}
+@supports (animation-timeline: view()) {
+  .install li {
+    animation: pour-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 35%;
+  }
+}
+@keyframes pour-in {
+  from {
+    opacity: 0;
+    translate: -12% 0;
+    rotate: -4deg;
+    scale: 0.9;
+  }
+}
+
+/* Menu board */
+.menu-board {
+  padding: clamp(28px, 3.5vw, 44px);
+  border-radius: 40px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.menu-board h2 {
+  color: var(--goo);
+  margin-bottom: 24px;
+}
+.menu-item + .menu-item {
+  margin-top: 24px;
+}
+.menu-item h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-size: clamp(24px, 2.2vw, 30px);
+}
+.menu-item h3::after {
+  content: "";
+  flex: 1;
+  border-bottom: 4px dotted rgb(251 253 245 / 35%);
+}
+.price {
+  margin-block: 4px 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gum);
+}
+.menu-item p:not(.price) {
+  max-width: 48ch;
+  font-size: 17px;
+  color: rgb(251 253 245 / 78%);
+}
+.menu-foot {
+  margin-top: 24px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--goo);
+}
+
+/* Fine print with wobbly jelly letters */
+.fine-print {
+  text-align: center;
+  padding-block: 56px 64px;
+}
+.fine-print h2 {
+  font-size: clamp(40px, 6vw, 80px);
+  color: var(--slop);
+}
+
+/* Jelly letters (any [data-jelly] element and the panel titles): split into
+   letters by slopometer.js; each one boings when the pointer passes over it. */
+.jelly .word {
+  display: inline-block;
+  white-space: nowrap;
+}
+.jelly .ch {
+  display: inline-block;
+  transform-origin: 50% 100%;
+}
+.jelly .ch.boing {
+  animation: boing 800ms;
+}
+@keyframes boing {
+  20% {
+    scale: 1.3 0.7;
+  }
+  40% {
+    scale: 0.8 1.25;
+    color: var(--gum);
+  }
+  60% {
+    scale: 1.1 0.9;
+  }
+  80% {
+    scale: 0.97 1.04;
+  }
+}
+.fine-print p {
+  max-width: 60ch;
+  margin: 20px auto 0;
+  font-size: 19px;
+  color: var(--muted);
+}
+.slop-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 32px;
+  padding: 24px var(--gutter);
+  background: var(--ink);
+  color: rgb(251 253 245 / 80%);
+  font-size: 16px;
+}
+.slop-footer a {
+  color: var(--goo);
+  margin-right: 12px;
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .tray,
+  .get {
+    grid-template-columns: 1fr;
+  }
+  .hero {
+    padding-block: 32px 112px;
+  }
+  .liquid {
+    font-size: clamp(52px, 14vw, 116px);
+  }
+  .gauge {
+    width: min(440px, 100%);
+  }
+  section {
+    padding-block: 56px;
+  }
+}
+@media (max-width: 640px) {
+  body.slop {
+    font-size: 18px;
+  }
+  .slop-nav nav a:not(.by) {
+    display: none;
+  }
+  .liquid {
+    -webkit-text-stroke-width: 2px;
+  }
+  .lede,
+  .tray-copy p,
+  .fine-print p,
+  .install li {
+    font-size: 18px;
+  }
+  .install li {
+    border-radius: 32px;
+    gap: 14px;
+  }
+  .install li:nth-child(even) {
+    margin-left: 0;
+  }
+  .step-n {
+    width: 44px;
+    font-size: 22px;
+  }
+  .menu-board {
+    border-radius: 32px;
+  }
+  .slop-tube {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .blob {
+    display: none;
+  }
+}

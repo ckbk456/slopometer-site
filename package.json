@@ -1,0 +1,29 @@
+{
+  "name": "slopometer-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5174 --strictPort",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4174 --strictPort",
+    "generate": "node tools/generate/build.mjs",
+    "generate:check": "node tools/generate/build.mjs --check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "html-validate index.html 404.html && node --check src/main.js && node --check src/theme.js",
+    "check": "npm run format:check && npm run generate:check && npm run lint && npm run build"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "5.3.0",
+    "@fontsource-variable/fredoka": "5.3.0"
+  },
+  "devDependencies": {
+    "html-validate": "11.16.0",
+    "prettier": "3.9.9",
+    "vite": "8.3.0"
+  }
+}

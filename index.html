@@ -1,0 +1,1414 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3730a3" />
+    <title>Slopometer — Your daily slop, quantified.</title>
+    <meta
+      name="description"
+      content="Slopometer is a free Mac menu-bar app and desktop widget that shows one GitHub account's contributions and pull requests. Your daily slop, quantified."
+    />
+    <link rel="canonical" href="https://slopometer.infinitex.vn/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Slopometer" />
+    <meta property="og:title" content="Slopometer for Mac" />
+    <meta
+      property="og:description"
+      content="Your daily slop, quantified. GitHub activity in your Mac menu bar and on your desktop."
+    />
+    <meta property="og:url" content="https://slopometer.infinitex.vn/" />
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body class="slop">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="blob" aria-hidden="true"></div>
+    <div class="slop-tube" aria-hidden="true">
+      <span class="tube-label">slop-o-meter</span>
+      <span class="tube-glass"><span class="tube-fill"></span></span>
+    </div>
+
+    <svg class="defs" aria-hidden="true" focusable="false">
+      <filter id="goo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur" />
+        <feColorMatrix
+          in="blur"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"
+        />
+      </filter>
+      <!-- Pressure warp for the over-revving gauge; JS drives the displacement scale. -->
+      <filter id="warp" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.012 0.02"
+          numOctaves="2"
+          seed="3"
+          result="noise"
+        >
+          <animate
+            attributeName="baseFrequency"
+            dur="1.6s"
+            values="0.012 0.02;0.02 0.012;0.012 0.02"
+            repeatCount="indefinite"
+          />
+        </feTurbulence>
+        <feDisplacementMap
+          id="warp-map"
+          in="SourceGraphic"
+          in2="noise"
+          scale="0"
+          xChannelSelector="R"
+          yChannelSelector="G"
+        />
+      </filter>
+    </svg>
+
+    <header class="slop-nav">
+      <a class="wordmark" href="#main" data-jelly>Slopometer</a>
+      <nav aria-label="Slopometer">
+        <a href="#tray">How it looks</a>
+        <a href="#install">Install</a>
+        <a href="https://github.com/ckbk456/slopometer">GitHub</a>
+        <a class="by" href="https://infinitex.vn/">hosted by Infinitex</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="title">
+        <div class="hero-copy">
+          <h1 id="title" class="liquid" data-text="Slopometer">Slopometer</h1>
+          <p class="tagline">
+            <span class="sparkle-text">Your daily slop, quantified.</span>
+          </p>
+          <p class="lede">
+            A tiny Mac app that measures one GitHub account's activity and
+            serves it up in your menu bar and on a desktop widget.
+          </p>
+          <div class="magnet">
+            <a
+              class="download"
+              href="https://updates.infinitex.vn/slopometer/Slopometer.dmg"
+              ><span>Download for Mac</span></a
+            >
+          </div>
+          <p class="meta">
+            Free and open source (MIT). Needs macOS 14 Sonoma or later.
+          </p>
+        </div>
+
+        <figure class="gauge">
+          <button
+            class="gauge-glass"
+            type="button"
+            aria-label="Tap the glass to add slop"
+          >
+            <svg viewBox="0 0 400 240" aria-hidden="true">
+              <path class="dial-face" d="M30 200 A170 170 0 0 1 370 200 Z" />
+              <path
+                class="dial-zone"
+                d="M55 200 A145 145 0 0 1 345 200"
+                pathLength="69"
+              />
+              <g class="dial-ticks">
+                <line x1="50.0" y1="200.0" x2="76.0" y2="200.0" class="major" />
+                <text x="96.0" y="208.0">0</text>
+                <line x1="53.3" y1="168.8" x2="67.0" y2="171.7" />
+                <line x1="63.0" y1="139.0" x2="75.8" y2="144.7" />
+                <line x1="78.6" y1="111.8" x2="90.0" y2="120.1" />
+                <line x1="99.6" y1="88.5" x2="109.0" y2="98.9" />
+                <line x1="125.0" y1="70.1" x2="138.0" y2="92.6" class="major" />
+                <text x="148.0" y="117.9">23</text>
+                <line x1="153.6" y1="57.3" x2="158.0" y2="70.7" />
+                <line x1="184.3" y1="50.8" x2="185.8" y2="64.7" />
+                <line x1="215.7" y1="50.8" x2="214.2" y2="64.7" />
+                <line x1="246.4" y1="57.3" x2="242.0" y2="70.7" />
+                <line x1="275.0" y1="70.1" x2="262.0" y2="92.6" class="major" />
+                <text x="252.0" y="117.9">46</text>
+                <line x1="300.4" y1="88.5" x2="291.0" y2="98.9" />
+                <line x1="321.4" y1="111.8" x2="310.0" y2="120.1" />
+                <line x1="337.0" y1="139.0" x2="324.2" y2="144.7" />
+                <line x1="346.7" y1="168.8" x2="333.0" y2="171.7" />
+                <line
+                  x1="350.0"
+                  y1="200.0"
+                  x2="324.0"
+                  y2="200.0"
+                  class="major"
+                />
+                <text x="304.0" y="208.0">69</text>
+              </g>
+              <g class="needle">
+                <path d="M196 200 L200 62 L204 200 Z" />
+                <circle cx="200" cy="200" r="16" />
+              </g>
+            </svg>
+          </button>
+          <figcaption aria-live="polite">
+            <strong data-count>42</strong>
+            <span data-count-label>contributions today</span>
+          </figcaption>
+        </figure>
+
+        <svg
+          class="drips"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <g filter="url(#goo)">
+            <rect x="0" y="70" width="1200" height="60" />
+            <circle class="drip d1" cx="120" cy="70" r="26" />
+            <circle class="drip d2" cx="330" cy="70" r="20" />
+            <circle class="drip d3" cx="560" cy="70" r="30" />
+            <circle class="drip d4" cx="790" cy="70" r="22" />
+            <circle class="drip d5" cx="1010" cy="70" r="28" />
+          </g>
+        </svg>
+      </section>
+
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-row">
+          <p>
+            <span>contributions</span><span>PRs opened</span
+            ><span>PRs merged</span><span>7-day average</span
+            ><span>30-day average</span><span>daily slop quota</span>
+          </p>
+          <p>
+            <span>contributions</span><span>PRs opened</span
+            ><span>PRs merged</span><span>7-day average</span
+            ><span>30-day average</span><span>daily slop quota</span>
+          </p>
+        </div>
+        <div class="marquee-row reverse">
+          <p>
+            <span>grid</span><span>columns</span><span>line</span
+            ><span>30 days</span><span>90 days</span><span>180 days</span
+            ><span>365 days</span><span>grid</span><span>columns</span
+            ><span>line</span><span>30 days</span><span>90 days</span
+            ><span>180 days</span><span>365 days</span>
+          </p>
+          <p>
+            <span>grid</span><span>columns</span><span>line</span
+            ><span>30 days</span><span>90 days</span><span>180 days</span
+            ><span>365 days</span><span>grid</span><span>columns</span
+            ><span>line</span><span>30 days</span><span>90 days</span
+            ><span>180 days</span><span>365 days</span>
+          </p>
+        </div>
+      </div>
+
+      <section class="tray" id="tray" aria-labelledby="tray-title">
+        <div class="tray-copy">
+          <h2 id="tray-title" data-jelly>The slop tray</h2>
+          <p>Five weeks of slop, right on your desktop.</p>
+          <div class="theme-picker" data-theme-picker></div>
+        </div>
+        <div class="tilt">
+          <div class="widget">
+            <div class="widget-head">
+              <b>42</b><span>contributions today so far</span>
+            </div>
+            <div class="widget-days" aria-hidden="true">
+              <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span
+              ><span class="is-today">Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+            <div
+              class="ripple-grid"
+              role="img"
+              aria-label="Five-week contribution calendar"
+            >
+              <span class="tile l0" data-col="0" data-row="0">0</span>
+              <span class="tile l1" data-col="1" data-row="0">2</span>
+              <span class="tile l2" data-col="2" data-row="0">12</span>
+              <span class="tile l4" data-col="3" data-row="0">34</span>
+              <span class="tile l1" data-col="4" data-row="0">3</span>
+              <span class="tile l0" data-col="5" data-row="0">0</span>
+              <span class="tile l0" data-col="6" data-row="0">0</span>
+              <span class="tile l1" data-col="0" data-row="1">5</span>
+              <span class="tile l1" data-col="1" data-row="1">4</span>
+              <span class="tile l0" data-col="2" data-row="1">0</span>
+              <span class="tile l3" data-col="3" data-row="1">22</span>
+              <span class="tile l2" data-col="4" data-row="1">18</span>
+              <span class="tile l1" data-col="5" data-row="1">10</span>
+              <span class="tile l2" data-col="6" data-row="1">12</span>
+              <span class="tile l1" data-col="0" data-row="2">9</span>
+              <span class="tile l1" data-col="1" data-row="2">6</span>
+              <span class="tile l1" data-col="2" data-row="2">2</span>
+              <span class="tile l2" data-col="3" data-row="2">21</span>
+              <span class="tile l4" data-col="4" data-row="2">36</span>
+              <span class="tile l3" data-col="5" data-row="2">26</span>
+              <span class="tile l0" data-col="6" data-row="2">0</span>
+              <span class="tile l0" data-col="0" data-row="3">0</span>
+              <span class="tile l2" data-col="1" data-row="3">21</span>
+              <span class="tile l1" data-col="2" data-row="3">5</span>
+              <span class="tile l1" data-col="3" data-row="3">2</span>
+              <span class="tile l0" data-col="4" data-row="3">0</span>
+              <span class="tile l3" data-col="5" data-row="3">26</span>
+              <span class="tile l1" data-col="6" data-row="3">7</span>
+              <span class="tile l0" data-col="0" data-row="4">0</span>
+              <span class="tile l1" data-col="1" data-row="4">4</span>
+              <span class="tile l4" data-col="2" data-row="4">34</span>
+              <span class="tile l1" data-col="3" data-row="4">7</span>
+              <span class="tile l4 today" data-col="4" data-row="4">42</span>
+              <span class="tile future" data-col="5" data-row="4"></span>
+              <span class="tile future" data-col="6" data-row="4"></span>
+            </div>
+            <div class="widget-foot">
+              <span>Synced 9:41 (2m ago)</span><span>Last 5 weeks</span>
+            </div>
+            <div class="shine" aria-hidden="true"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="views" aria-labelledby="views-title">
+        <div class="views-head">
+          <h2 id="views-title" data-jelly>Slop, plated five ways</h2>
+        </div>
+        <ul class="track" tabindex="0" aria-label="Chart styles">
+          <li class="panel">
+            <div class="panel-art">
+              <svg
+                viewBox="0 0 320 180"
+                role="img"
+                aria-label="Contribution grid"
+              >
+                <rect
+                  x="3.3"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="25.8"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="25.8"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f3"
+                />
+                <rect
+                  x="25.8"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="25.8"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="25.8"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f4"
+                />
+                <rect
+                  x="25.8"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="25.8"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="48.3"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="48.3"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="48.3"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="48.3"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f4"
+                />
+                <rect
+                  x="48.3"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="48.3"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f3"
+                />
+                <rect
+                  x="48.3"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="70.8"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="70.8"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="70.8"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="70.8"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="70.8"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f3"
+                />
+                <rect
+                  x="70.8"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="70.8"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="93.3"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="93.3"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="93.3"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="93.3"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f4"
+                />
+                <rect
+                  x="93.3"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="93.3"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="93.3"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="115.8"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="115.8"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f3"
+                />
+                <rect
+                  x="115.8"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f3"
+                />
+                <rect
+                  x="115.8"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="115.8"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="115.8"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="115.8"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="138.3"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="138.3"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f4"
+                />
+                <rect
+                  x="138.3"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="138.3"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="138.3"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="138.3"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="138.3"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="160.8"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="160.8"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="160.8"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="160.8"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="160.8"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="160.8"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="160.8"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="183.3"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="183.3"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f4"
+                />
+                <rect
+                  x="183.3"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="183.3"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f4"
+                />
+                <rect
+                  x="183.3"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="183.3"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="183.3"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="205.8"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="205.8"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="205.8"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="205.8"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f4"
+                />
+                <rect
+                  x="205.8"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="205.8"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="205.8"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="228.3"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="228.3"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="228.3"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="228.3"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f3"
+                />
+                <rect
+                  x="228.3"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="228.3"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="228.3"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="250.8"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="250.8"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="250.8"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="250.8"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="250.8"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f4"
+                />
+                <rect
+                  x="250.8"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f3"
+                />
+                <rect
+                  x="250.8"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="273.3"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="273.3"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f2"
+                />
+                <rect
+                  x="273.3"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="273.3"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="273.3"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="273.3"
+                  y="124.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f3"
+                />
+                <rect
+                  x="273.3"
+                  y="147"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="295.8"
+                  y="12"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f0"
+                />
+                <rect
+                  x="295.8"
+                  y="34.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="295.8"
+                  y="57"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f4"
+                />
+                <rect
+                  x="295.8"
+                  y="79.5"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f1"
+                />
+                <rect
+                  x="295.8"
+                  y="102"
+                  width="21"
+                  height="21"
+                  rx="1.5"
+                  class="f4 s-today"
+                />
+              </svg>
+            </div>
+            <h3 data-jelly>Grid</h3>
+            <p>Darker means sloppier.</p>
+          </li>
+          <li class="panel">
+            <div class="panel-art">
+              <svg viewBox="0 0 320 180" role="img" aria-label="Daily columns">
+                <line x1="0" y1="166" x2="320" y2="166" class="s-grid" />
+                <line x1="0" y1="135.6" x2="320" y2="135.6" class="s-grid" />
+                <line x1="0" y1="105.2" x2="320" y2="105.2" class="s-grid" />
+                <line x1="0" y1="74.8" x2="320" y2="74.8" class="s-grid" />
+                <line x1="0" y1="44.4" x2="320" y2="44.4" class="s-grid" />
+                <line x1="0" y1="14" x2="320" y2="14" class="s-grid" />
+                <line x1="45.6" y1="14" x2="45.6" y2="166" class="s-grid" />
+                <line x1="118.4" y1="14" x2="118.4" y2="166" class="s-grid" />
+                <line x1="191.2" y1="14" x2="191.2" y2="166" class="s-grid" />
+                <line x1="264" y1="14" x2="264" y2="166" class="s-grid" />
+                <rect x="5.6" y="62.6" width="7.3" height="103.4" class="f4" />
+                <rect x="16" y="156.9" width="7.3" height="9.1" class="f1" />
+                <rect x="47.2" y="150.8" width="7.3" height="15.2" class="f1" />
+                <rect x="57.6" y="153.8" width="7.3" height="12.2" class="f1" />
+                <rect x="78.4" y="99.1" width="7.3" height="66.9" class="f3" />
+                <rect x="88.8" y="111.3" width="7.3" height="54.7" class="f2" />
+                <rect x="99.2" y="135.6" width="7.3" height="30.4" class="f1" />
+                <rect
+                  x="109.6"
+                  y="129.5"
+                  width="7.3"
+                  height="36.5"
+                  class="f2"
+                />
+                <rect x="120" y="138.6" width="7.3" height="27.4" class="f1" />
+                <rect
+                  x="130.4"
+                  y="147.8"
+                  width="7.3"
+                  height="18.2"
+                  class="f1"
+                />
+                <rect x="140.8" y="159.9" width="7.3" height="6.1" class="f1" />
+                <rect
+                  x="151.2"
+                  y="102.2"
+                  width="7.3"
+                  height="63.8"
+                  class="f2"
+                />
+                <rect
+                  x="161.6"
+                  y="56.6"
+                  width="7.3"
+                  height="109.4"
+                  class="f4"
+                />
+                <rect x="172" y="87" width="7.3" height="79" class="f3" />
+                <rect
+                  x="203.2"
+                  y="102.2"
+                  width="7.3"
+                  height="63.8"
+                  class="f2"
+                />
+                <rect
+                  x="213.6"
+                  y="150.8"
+                  width="7.3"
+                  height="15.2"
+                  class="f1"
+                />
+                <rect x="224" y="159.9" width="7.3" height="6.1" class="f1" />
+                <rect x="244.8" y="87" width="7.3" height="79" class="f3" />
+                <rect
+                  x="255.2"
+                  y="144.7"
+                  width="7.3"
+                  height="21.3"
+                  class="f1"
+                />
+                <rect x="276" y="153.8" width="7.3" height="12.2" class="f1" />
+                <rect
+                  x="286.4"
+                  y="62.6"
+                  width="7.3"
+                  height="103.4"
+                  class="f4"
+                />
+                <rect
+                  x="296.8"
+                  y="144.7"
+                  width="7.3"
+                  height="21.3"
+                  class="f1"
+                />
+                <rect
+                  x="307.2"
+                  y="38.3"
+                  width="7.3"
+                  height="127.7"
+                  class="f4 o-today"
+                />
+              </svg>
+            </div>
+            <h3 data-jelly>Columns</h3>
+            <p>One bar per day.</p>
+          </li>
+          <li class="panel">
+            <div class="panel-art">
+              <svg
+                viewBox="0 0 320 180"
+                role="img"
+                aria-label="Line chart with moving average"
+              >
+                <line x1="0" y1="166" x2="320" y2="166" class="s-grid" />
+                <line x1="0" y1="135.6" x2="320" y2="135.6" class="s-grid" />
+                <line x1="0" y1="105.2" x2="320" y2="105.2" class="s-grid" />
+                <line x1="0" y1="74.8" x2="320" y2="74.8" class="s-grid" />
+                <line x1="0" y1="44.4" x2="320" y2="44.4" class="s-grid" />
+                <line x1="0" y1="14" x2="320" y2="14" class="s-grid" />
+                <line x1="45.6" y1="14" x2="45.6" y2="166" class="s-grid" />
+                <line x1="118.4" y1="14" x2="118.4" y2="166" class="s-grid" />
+                <line x1="191.2" y1="14" x2="191.2" y2="166" class="s-grid" />
+                <line x1="264" y1="14" x2="264" y2="166" class="s-grid" />
+                <polyline
+                  points="9.2,62.6 19.6,156.9 30,166 40.4,166 50.8,150.8 61.2,153.8 71.6,166 82,99.1 92.4,111.3 102.8,135.6 113.2,129.5 123.6,138.6 134,147.8 144.4,159.9 154.8,102.2 165.2,56.6 175.6,87 186,166 196.4,166 206.8,102.2 217.2,150.8 227.6,159.9 238,166 248.4,87 258.8,144.7 269.2,166 279.6,153.8 290,62.6 300.4,144.7 310.8,38.3"
+                  fill="none"
+                  class="s-accent"
+                  stroke-width="2"
+                  stroke-linejoin="round"
+                />
+                <polyline
+                  points="9.2,138.2 19.6,136.9 30,137.8 40.4,143.9 50.8,141.7 61.2,140.8 71.6,146 82,151.2 92.4,144.7 102.8,140.4 113.2,135.2 123.6,133.4 134,132.6 144.4,131.7 154.8,132.1 165.2,124.3 175.6,117.4 186,122.6 196.4,126.5 206.8,120 217.2,118.7 227.6,126.9 238,142.5 248.4,142.5 258.8,139.5 269.2,139.5 279.6,146.9 290,134.3 300.4,132.1 310.8,113.9"
+                  fill="none"
+                  class="s-trend"
+                  stroke-width="2"
+                  stroke-dasharray="4 3"
+                />
+              </svg>
+            </div>
+            <h3 data-jelly>Line + 7-day average</h3>
+            <p>Spiky days, smoothed out.</p>
+          </li>
+          <li class="panel">
+            <div class="panel-art">
+              <svg viewBox="0 0 320 180" role="img" aria-label="Daily PR quota">
+                <rect
+                  x="22"
+                  y="26"
+                  width="276"
+                  height="126"
+                  rx="12"
+                  class="f-card"
+                />
+                <text x="36" y="78" class="q-num">67</text>
+                <text x="82" y="78" class="q-den">/ 69</text>
+                <text x="128" y="78" class="q-title">Daily slop quota</text>
+                <text x="128" y="92" class="q-sub">
+                  67 of 69 PRs merged today
+                </text>
+                <path
+                  d="M243 69.5h6M243 78.5h6M243.5 69.5l5 4.5-5 4.5M248.5 69.5l-5 4.5 5 4.5"
+                  fill="none"
+                  class="s-muted"
+                />
+                <text x="284" y="78" class="q-status">2 to go</text>
+                <rect
+                  x="36"
+                  y="104"
+                  width="248"
+                  height="8"
+                  rx="4"
+                  class="f-track"
+                />
+                <rect
+                  x="36"
+                  y="104"
+                  width="240.8"
+                  height="8"
+                  rx="4"
+                  class="f-accent"
+                />
+                <path
+                  d="M37 128.5l3.5 3.5 3.5-3.5"
+                  fill="none"
+                  class="s-accent"
+                  stroke-width="1.4"
+                />
+                <text x="49" y="134" class="q-link">
+                  Show the 67 PRs counted
+                </text>
+              </svg>
+            </div>
+            <h3 data-jelly>Daily slop quota</h3>
+            <p>Set a daily PR goal.</p>
+          </li>
+          <li class="panel">
+            <div class="panel-art">
+              <svg viewBox="0 0 320 180" role="img" aria-label="Menu bar panel">
+                <rect x="-10" y="0" width="340" height="24" class="f-bar" />
+                <rect
+                  x="190"
+                  y="3"
+                  width="42"
+                  height="18"
+                  rx="5"
+                  class="f-hl"
+                />
+                <rect
+                  x="196"
+                  y="7"
+                  width="11"
+                  height="10"
+                  rx="1.6"
+                  fill="none"
+                  class="s-ink"
+                />
+                <path
+                  d="M196 10.18h11M199.08 5.4v2.6M203.92 5.4v2.6"
+                  fill="none"
+                  class="s-ink"
+                />
+                <text x="211" y="16.5" class="m-bar">42</text>
+                <rect
+                  x="242"
+                  y="8"
+                  width="17"
+                  height="8.5"
+                  rx="2.4"
+                  fill="none"
+                  class="s-ink"
+                />
+                <rect
+                  x="244"
+                  y="10"
+                  width="11"
+                  height="4.5"
+                  rx="1"
+                  class="f-ink"
+                />
+                <text x="288" y="16.5" class="m-bar m-clock">Thu 9:41</text>
+                <rect
+                  x="48"
+                  y="29"
+                  width="244"
+                  height="190"
+                  rx="14"
+                  class="f-window"
+                />
+                <rect
+                  x="64"
+                  y="46"
+                  width="10"
+                  height="9"
+                  rx="1.6"
+                  fill="none"
+                  class="s-muted"
+                />
+                <path
+                  d="M64 48.8h10M66.8 44.4v2.6M71.2 44.4v2.6"
+                  fill="none"
+                  class="s-muted"
+                />
+                <text x="78" y="54" class="m-cap">CONTRIBUTIONS</text>
+                <text x="63" y="84" class="m-big">42</text>
+                <text x="64" y="100" class="m-sub">
+                  Contributions today so far
+                </text>
+                <text x="64" y="119" class="m-cap m-plain">Last 7 days</text>
+                <rect
+                  x="64"
+                  y="125"
+                  width="26.9"
+                  height="22"
+                  rx="4.8"
+                  class="f3"
+                />
+                <text x="77.4" y="140" class="m-tile n3">26</text>
+                <text x="77.4" y="157" class="m-day">Fri</text>
+                <rect
+                  x="94.9"
+                  y="125"
+                  width="26.9"
+                  height="22"
+                  rx="4.8"
+                  class="f1"
+                />
+                <text x="108.3" y="140" class="m-tile n1">7</text>
+                <text x="108.3" y="157" class="m-day">Sat</text>
+                <rect
+                  x="125.7"
+                  y="125"
+                  width="26.9"
+                  height="22"
+                  rx="4.8"
+                  class="f0"
+                />
+                <text x="139.1" y="140" class="m-tile n0">0</text>
+                <text x="139.1" y="157" class="m-day">Sun</text>
+                <rect
+                  x="156.6"
+                  y="125"
+                  width="26.9"
+                  height="22"
+                  rx="4.8"
+                  class="f1"
+                />
+                <text x="170" y="140" class="m-tile n1">4</text>
+                <text x="170" y="157" class="m-day">Mon</text>
+                <rect
+                  x="187.4"
+                  y="125"
+                  width="26.9"
+                  height="22"
+                  rx="4.8"
+                  class="f4"
+                />
+                <text x="200.9" y="140" class="m-tile n4">34</text>
+                <text x="200.9" y="157" class="m-day">Tue</text>
+                <rect
+                  x="218.3"
+                  y="125"
+                  width="26.9"
+                  height="22"
+                  rx="4.8"
+                  class="f1"
+                />
+                <text x="231.7" y="140" class="m-tile n1">7</text>
+                <text x="231.7" y="157" class="m-day">Wed</text>
+                <rect
+                  x="249.1"
+                  y="125"
+                  width="26.9"
+                  height="22"
+                  rx="4.8"
+                  class="f4 s-today"
+                />
+                <text x="262.6" y="140" class="m-tile n4">42</text>
+                <text x="262.6" y="157" class="m-day">Thu</text>
+                <line x1="48" y1="172" x2="292" y2="172" class="s-grid" />
+              </svg>
+            </div>
+            <h3 data-jelly>Menu bar</h3>
+            <p>Today's count, always up top.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="get" id="install" aria-labelledby="install-title">
+        <div class="install">
+          <h2 id="install-title" data-jelly>Get sloppy in four steps</h2>
+          <ol>
+            <li>
+              <span class="step-n">1</span>
+              <p>Open <b>Slopometer.dmg</b>.</p>
+            </li>
+            <li>
+              <span class="step-n">2</span>
+              <p>Drag it into Applications.</p>
+            </li>
+            <li>
+              <span class="step-n">3</span>
+              <p>Type your GitHub username.</p>
+            </li>
+            <li>
+              <span class="step-n">4</span>
+              <p>Add the widget via <b>Edit Widgets</b>.</p>
+            </li>
+          </ol>
+        </div>
+        <div class="menu-board">
+          <h2 id="menu-title" data-jelly>Today's menu</h2>
+          <article class="menu-item">
+            <h3>Username only</h3>
+            <p class="price">Free, no sign-in</p>
+            <p>
+              Your public contribution calendar, read from your GitHub profile
+              page. It's not an official API, so it can break if GitHub changes
+              it.
+            </p>
+          </article>
+          <article class="menu-item">
+            <h3>With a read-only token</h3>
+            <p class="price">Still free</p>
+            <p>
+              A fine-grained, read-only token adds PRs, private repos,
+              repository filters and a daily quota. Add one per organization.
+              Kept in Keychain.
+            </p>
+          </article>
+          <p class="menu-foot">No account, no tracking.</p>
+        </div>
+      </section>
+
+      <section class="fine-print" aria-labelledby="fine-title">
+        <h2 id="fine-title" data-jelly>Not a slop detector.</h2>
+        <p>
+          “Slop” is the joke. It just counts contributions and PRs. It can't
+          spot AI code, won't judge yours, ranks nobody and never writes to
+          GitHub.
+        </p>
+      </section>
+    </main>
+
+    <footer class="slop-footer">
+      <p>
+        Made by Khang Cao in Ho Chi Minh City. Hosted by
+        <a href="https://infinitex.vn/">Infinitex</a>.
+        <a href="mailto:contact@infinitex.vn">contact@infinitex.vn</a>
+      </p>
+      <p>
+        © 2026 Khang Cao.
+        <a href="https://github.com/ckbk456/slopometer/blob/main/LICENSE"
+          >MIT License</a
+        >
+      </p>
+    </footer>
+  </body>
+</html>

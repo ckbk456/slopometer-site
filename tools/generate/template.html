@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3730a3" />
+    <title>Slopometer — Your daily slop, quantified.</title>
+    <meta
+      name="description"
+      content="Slopometer is a free Mac menu-bar app and desktop widget that shows one GitHub account's contributions and pull requests. Your daily slop, quantified."
+    />
+    <link rel="canonical" href="https://slopometer.infinitex.vn/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Slopometer" />
+    <meta property="og:title" content="Slopometer for Mac" />
+    <meta
+      property="og:description"
+      content="Your daily slop, quantified. GitHub activity in your Mac menu bar and on your desktop."
+    />
+    <meta property="og:url" content="https://slopometer.infinitex.vn/" />
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body class="slop">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="blob" aria-hidden="true"></div>
+    <div class="slop-tube" aria-hidden="true">
+      <span class="tube-label">slop-o-meter</span>
+      <span class="tube-glass"><span class="tube-fill"></span></span>
+    </div>
+
+    <svg class="defs" aria-hidden="true" focusable="false">
+      <filter id="goo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur" />
+        <feColorMatrix
+          in="blur"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"
+        />
+      </filter>
+      <!-- Pressure warp for the over-revving gauge; JS drives the displacement scale. -->
+      <filter id="warp" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.012 0.02"
+          numOctaves="2"
+          seed="3"
+          result="noise"
+        >
+          <animate
+            attributeName="baseFrequency"
+            dur="1.6s"
+            values="0.012 0.02;0.02 0.012;0.012 0.02"
+            repeatCount="indefinite"
+          />
+        </feTurbulence>
+        <feDisplacementMap
+          id="warp-map"
+          in="SourceGraphic"
+          in2="noise"
+          scale="0"
+          xChannelSelector="R"
+          yChannelSelector="G"
+        />
+      </filter>
+    </svg>
+
+    <header class="slop-nav">
+      <a class="wordmark" href="#main" data-jelly>Slopometer</a>
+      <nav aria-label="Slopometer">
+        <a href="#tray">How it looks</a>
+        <a href="#install">Install</a>
+        <a href="https://github.com/ckbk456/slopometer">GitHub</a>
+        <a class="by" href="https://infinitex.vn/">hosted by Infinitex</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="title">
+        <div class="hero-copy">
+          <h1 id="title" class="liquid" data-text="Slopometer">Slopometer</h1>
+          <p class="tagline">
+            <span class="sparkle-text">Your daily slop, quantified.</span>
+          </p>
+          <p class="lede">
+            A tiny Mac app that measures one GitHub account's activity and
+            serves it up in your menu bar and on a desktop widget.
+          </p>
+          <div class="magnet">
+            <a
+              class="download"
+              href="https://updates.infinitex.vn/slopometer/Slopometer.dmg"
+              ><span>Download for Mac</span></a
+            >
+          </div>
+          <p class="meta">
+            Free and open source (MIT). Needs macOS 14 Sonoma or later.
+          </p>
+        </div>
+
+        <figure class="gauge">
+          <button
+            class="gauge-glass"
+            type="button"
+            aria-label="Tap the glass to add slop"
+          >
+            <svg viewBox="0 0 400 240" aria-hidden="true">
+              <path class="dial-face" d="M30 200 A170 170 0 0 1 370 200 Z" />
+              <path
+                class="dial-zone"
+                d="M55 200 A145 145 0 0 1 345 200"
+                pathLength="69"
+              />
+              <g class="dial-ticks">%%TICKS%%</g>
+              <g class="needle">
+                <path d="M196 200 L200 62 L204 200 Z" />
+                <circle cx="200" cy="200" r="16" />
+              </g>
+            </svg>
+          </button>
+          <figcaption aria-live="polite">
+            <strong data-count>42</strong>
+            <span data-count-label>contributions today</span>
+          </figcaption>
+        </figure>
+
+        <svg
+          class="drips"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <g filter="url(#goo)">
+            <rect x="0" y="70" width="1200" height="60" />
+            <circle class="drip d1" cx="120" cy="70" r="26" />
+            <circle class="drip d2" cx="330" cy="70" r="20" />
+            <circle class="drip d3" cx="560" cy="70" r="30" />
+            <circle class="drip d4" cx="790" cy="70" r="22" />
+            <circle class="drip d5" cx="1010" cy="70" r="28" />
+          </g>
+        </svg>
+      </section>
+
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-row">
+          <p>
+            <span>contributions</span><span>PRs opened</span
+            ><span>PRs merged</span><span>7-day average</span
+            ><span>30-day average</span><span>daily slop quota</span>
+          </p>
+          <p>
+            <span>contributions</span><span>PRs opened</span
+            ><span>PRs merged</span><span>7-day average</span
+            ><span>30-day average</span><span>daily slop quota</span>
+          </p>
+        </div>
+        <div class="marquee-row reverse">
+          <p>
+            <span>grid</span><span>columns</span><span>line</span
+            ><span>30 days</span><span>90 days</span><span>180 days</span
+            ><span>365 days</span><span>grid</span><span>columns</span
+            ><span>line</span><span>30 days</span><span>90 days</span
+            ><span>180 days</span><span>365 days</span>
+          </p>
+          <p>
+            <span>grid</span><span>columns</span><span>line</span
+            ><span>30 days</span><span>90 days</span><span>180 days</span
+            ><span>365 days</span><span>grid</span><span>columns</span
+            ><span>line</span><span>30 days</span><span>90 days</span
+            ><span>180 days</span><span>365 days</span>
+          </p>
+        </div>
+      </div>
+
+      <section class="tray" id="tray" aria-labelledby="tray-title">
+        <div class="tray-copy">
+          <h2 id="tray-title" data-jelly>The slop tray</h2>
+          <p>Five weeks of slop, right on your desktop.</p>
+          <div class="theme-picker" data-theme-picker></div>
+        </div>
+        <div class="tilt">
+          <div class="widget">
+            <div class="widget-head">
+              <b>42</b><span>contributions today so far</span>
+            </div>
+            <div class="widget-days" aria-hidden="true">
+              <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span
+              ><span class="is-today">Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+            <div
+              class="ripple-grid"
+              role="img"
+              aria-label="Five-week contribution calendar"
+            >
+              %%TILES%%
+            </div>
+            <div class="widget-foot">
+              <span>Synced 9:41 (2m ago)</span><span>Last 5 weeks</span>
+            </div>
+            <div class="shine" aria-hidden="true"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="views" aria-labelledby="views-title">
+        <div class="views-head">
+          <h2 id="views-title" data-jelly>Slop, plated five ways</h2>
+        </div>
+        <ul class="track" tabindex="0" aria-label="Chart styles">
+          %%PANELS%%
+        </ul>
+      </section>
+
+      <section class="get" id="install" aria-labelledby="install-title">
+        <div class="install">
+          <h2 id="install-title" data-jelly>Get sloppy in four steps</h2>
+          <ol>
+            <li>
+              <span class="step-n">1</span>
+              <p>Open <b>Slopometer.dmg</b>.</p>
+            </li>
+            <li>
+              <span class="step-n">2</span>
+              <p>Drag it into Applications.</p>
+            </li>
+            <li>
+              <span class="step-n">3</span>
+              <p>Type your GitHub username.</p>
+            </li>
+            <li>
+              <span class="step-n">4</span>
+              <p>Add the widget via <b>Edit Widgets</b>.</p>
+            </li>
+          </ol>
+        </div>
+        <div class="menu-board">
+          <h2 id="menu-title" data-jelly>Today's menu</h2>
+          <article class="menu-item">
+            <h3>Username only</h3>
+            <p class="price">Free, no sign-in</p>
+            <p>
+              Your public contribution calendar, read from your GitHub profile
+              page. It's not an official API, so it can break if GitHub changes
+              it.
+            </p>
+          </article>
+          <article class="menu-item">
+            <h3>With a read-only token</h3>
+            <p class="price">Still free</p>
+            <p>
+              A fine-grained, read-only token adds PRs, private repos,
+              repository filters and a daily quota. Add one per organization.
+              Kept in Keychain.
+            </p>
+          </article>
+          <p class="menu-foot">No account, no tracking.</p>
+        </div>
+      </section>
+
+      <section class="fine-print" aria-labelledby="fine-title">
+        <h2 id="fine-title" data-jelly>Not a slop detector.</h2>
+        <p>
+          “Slop” is the joke. It just counts contributions and PRs. It can't
+          spot AI code, won't judge yours, ranks nobody and never writes to
+          GitHub.
+        </p>
+      </section>
+    </main>
+
+    <footer class="slop-footer">
+      <p>
+        Made by Khang Cao in Ho Chi Minh City. Hosted by
+        <a href="https://infinitex.vn/">Infinitex</a>.
+        <a href="mailto:contact@infinitex.vn">contact@infinitex.vn</a>
+      </p>
+      <p>
+        © 2026 Khang Cao.
+        <a href="https://github.com/ckbk456/slopometer/blob/main/LICENSE"
+          >MIT License</a
+        >
+      </p>
+    </footer>
+  </body>
+</html>
