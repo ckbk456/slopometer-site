@@ -159,31 +159,15 @@ const menubar =
   `<line x1="48" y1="172" x2="292" y2="172" class="s-grid"/>`;
 
 export const panels = [
-  [
-    "Grid",
-    "Darker means sloppier.",
-    svg(grid, "Contribution grid, sample data"),
-  ],
-  [
-    "Columns",
-    "One bar per day.",
-    svg(gridlines + bars, "Daily columns, sample data"),
-  ],
+  ["Grid", "Darker means sloppier.", svg(grid, "Contribution grid")],
+  ["Columns", "One bar per day.", svg(gridlines + bars, "Daily columns")],
   [
     "Line + 7-day average",
     "Spiky days, smoothed out.",
-    svg(line, "Line chart with moving average, sample data"),
+    svg(line, "Line chart with moving average"),
   ],
-  [
-    "Daily slop quota",
-    "Set a daily PR goal.",
-    svg(quota, "Daily PR quota, sample data"),
-  ],
-  [
-    "Menu bar",
-    "Today's count, always up top.",
-    svg(menubar, "Menu bar panel, sample data"),
-  ],
+  ["Daily slop quota", "Set a daily PR goal.", svg(quota, "Daily PR quota")],
+  ["Menu bar", "Today's count, always up top.", svg(menubar, "Menu bar panel")],
 ]
   .map(
     ([t, desc, art]) => `${ind.slice(4)}<li class="panel">

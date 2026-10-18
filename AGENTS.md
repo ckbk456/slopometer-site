@@ -2,9 +2,10 @@
 
 The download website for [Slopometer](https://github.com/ckbk456/slopometer), a free macOS
 menu-bar app and desktop widget for one GitHub account's activity. Intended home:
-`https://slopometer.infinitex.vn`. Brand position: an independent product with its own
-playful identity, endorsed with a small "by Infinitex" credit. It does not follow the
-Infinitex brand system and is not listed as an Infinitex product or service.
+`https://slopometer.infinitex.vn`. Brand position: Khang Cao's personal project with its own
+playful identity (© Khang Cao, MIT), hosted on Infinitex's domain and credited with a small
+"hosted by Infinitex" link. It does not follow the Infinitex brand system and is not listed
+as an Infinitex product or service.
 
 ## Communication and authority
 
@@ -24,9 +25,9 @@ effects. Key rules:
 
 - "Slop" is the playful name for counted activity. Never claim AI-authorship or code-quality
   detection, ranking or grading.
-- Visible copy is end-user facing only; no developer notes. Illustrations carry their
-  sample-data disclosure in their accessible names. Sample numbers stay obviously silly
-  (42 today, 67 of 69 PRs).
+- Visible copy is end-user facing only; no developer notes. Illustrations carry no
+  sample-data labels, visible or accessible (owner's decision); their numbers stay obviously
+  silly (42 today, 67 of 69 PRs) so they never read as anyone's real activity.
 - Illustrations must match the app's real SwiftUI views; recheck them when the app's views
   change. Theme presets mirror the app's `ThemePreset.swift`.
 - Product facts (requirements, data sources, token storage) come from the app repository's

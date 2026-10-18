@@ -2,8 +2,10 @@
 
 ## Brand position
 
-Slopometer is a free, independent Mac app with its own playful identity. Infinitex makes
-it and is credited with a small "by Infinitex" link in the navigation and a footer credit.
+Slopometer is a free, MIT-licensed Mac app with its own playful identity: Khang Cao's
+personal project (© Khang Cao), hosted on Infinitex's domain. Infinitex is credited with a
+small "hosted by Infinitex" link in the navigation and in the footer (owner's decision,
+19 October 2026).
 It deliberately does **not** use the Infinitex brand system (Montserrat, brand blue) and is
 not presented as an Infinitex commercial product or service. Decided by the owner on
 18 October 2026; the Infinitex homepage links here only from its footer.
@@ -68,8 +70,9 @@ effects need a fine pointer.
 - "Slop" is the joke. The page never claims AI-authorship or code-quality detection; the
   fine print says plainly that it counts contributions and PRs, can't spot AI code, judges
   nothing, ranks nobody and never writes to GitHub.
-- Visible copy is for end users only: no "Sample data" or "drag to scroll" captions. The
-  sample-data disclosure lives in each illustration's `role="img"` accessible name.
+- Visible copy is for end users only: no "Sample data" or "drag to scroll" captions, and
+  no sample-data wording in accessible names either (owner's decision, 19 October 2026).
+  Illustrations are named for what they show.
 - Sample numbers are deliberately silly (42 today, 67 of 69 PRs).
 - Facts come from the app's SPEC: macOS 14 or later; free and MIT-licensed; username-only
   reads the public profile calendar, which is not an official API and can break; a

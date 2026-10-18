@@ -2,7 +2,8 @@
 
 The download website for [Slopometer](https://github.com/ckbk456/slopometer): a free macOS
 menu-bar app and desktop widget that shows one GitHub account's contributions and pull
-requests. _Your daily slop, quantified._ Made by [Infinitex](https://infinitex.vn).
+requests. _Your daily slop, quantified._ A personal project by Khang Cao (MIT), hosted by
+[Infinitex](https://infinitex.vn).
 
 Planned address: **https://slopometer.infinitex.vn** (not live yet; see
 [docs/deployment.md](docs/deployment.md)).
