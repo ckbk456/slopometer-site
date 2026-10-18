@@ -1,0 +1,36 @@
+@import "@fontsource-variable/fredoka";
+@import "@fontsource-variable/bricolage-grotesque/standard.css";
+
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  margin: 0;
+  padding: 24px;
+  background: #e6f0d2;
+  color: #2a1636;
+  font:
+    20px/1.5 "Bricolage Grotesque Variable",
+    system-ui,
+    sans-serif;
+  text-align: center;
+}
+.code {
+  margin: 0;
+  font:
+    700 clamp(96px, 22vw, 200px) / 1 "Fredoka Variable",
+    system-ui,
+    sans-serif;
+  color: #116329;
+}
+h1 {
+  margin: 8px 0 24px;
+  font:
+    600 clamp(28px, 5vw, 44px) / 1.1 "Fredoka Variable",
+    system-ui,
+    sans-serif;
+}
+a {
+  color: #116329;
+  font-weight: 700;
+}
