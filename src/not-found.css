@@ -21,7 +21,7 @@ body {
     700 clamp(96px, 22vw, 200px) / 1 "Fredoka Variable",
     system-ui,
     sans-serif;
-  color: #116329;
+  color: #3730a3;
 }
 h1 {
   margin: 8px 0 24px;
@@ -31,6 +31,6 @@ h1 {
     sans-serif;
 }
 a {
-  color: #116329;
+  color: #3730a3;
   font-weight: 700;
 }

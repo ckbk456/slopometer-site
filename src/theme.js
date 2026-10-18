@@ -6,11 +6,8 @@ import "./theme.css";
 // page reads them. Everything above the DOM section is pure so it can be tested in Node.
 
 const PAPER = "#fbfdf5";
-// SlopTheme.lightBackground: the app's light window background.
-const APP_LIGHT_BACKGROUND = "#f5f5f5";
 const INK = "#2a1636";
 const STORAGE_KEY = "slopometer-theme";
-const LEVEL_OPACITIES = [0.35, 0.55, 0.75, 1.0];
 
 // --- sRGB, WCAG contrast, OKLab -------------------------------------------------------
 
@@ -88,10 +85,6 @@ const mix = (a, b, t) => {
   return fromOklab(x.map((v, i) => v + (y[i] - v) * t));
 };
 
-/** `ThemeColor.blended(over:opacity:)`: an opacity fill in sRGB. */
-const blend = (color, background, opacity) =>
-  color.map((c, i) => c * opacity + background[i] * (1 - opacity));
-
 const prefersLightText = (rgb) =>
   contrastRgb(rgb, [1, 1, 1]) >= contrastRgb(rgb, [0, 0, 0]);
 
@@ -151,24 +144,14 @@ const chroma = (rgb) => {
 
 export const PRESETS = [
   {
-    id: "slop-green",
-    name: "Slop Green",
-    // #116329 at the level opacities over the app's light background, as in the app.
-    gradient: LEVEL_OPACITIES.map((o) =>
-      rgbToHex(blend(hexToRgb("#116329"), hexToRgb(APP_LIGHT_BACKGROUND), o)),
-    ),
-    accent: "#116329",
-    goo: "#7bc96f",
+    id: "electric",
+    name: "Slop Electric",
+    gradient: ["#93c5fd", "#3b82f6", "#4f46e5", "#3730a3"],
   },
   {
     id: "github",
     name: "GitHub",
     gradient: ["#9be9a8", "#40c463", "#30a14e", "#216e39"],
-  },
-  {
-    id: "electric",
-    name: "Electric",
-    gradient: ["#7dd3fc", "#38bdf8", "#6366f1", "#7c3aed"],
   },
   {
     id: "vibe-coded",
@@ -224,7 +207,7 @@ export const PRESETS = [
   },
 ];
 
-export const DEFAULT_PRESET = "slop-green";
+export const DEFAULT_PRESET = "electric";
 
 /** `SlopTheme.Appearance.color(at:)`: position `t` along the gradient, OKLab between stops. */
 const colorAt = (gradient, t) => {

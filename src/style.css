@@ -11,13 +11,13 @@
   /* Theme contract: src/slopometer-theme.js overrides these six from the app's presets.
      --l0 empty day, --l1..--l4 activity levels, --slop accent (dark enough for white
      text), --goo bright accent (readable on --slop and --ink). */
-  --l0: #d7e9dd;
-  --l1: #a5c2ae;
-  --l2: #78a585;
-  --l3: #4a885c;
-  --l4: #116329;
-  --slop: #116329;
-  --goo: #7bc96f;
+  --l0: #d4e6fb;
+  --l1: #93c5fd;
+  --l2: #3b82f6;
+  --l3: #4f46e5;
+  --l4: #3730a3;
+  --slop: #3730a3;
+  --goo: #488dff;
   /* Page tints follow the theme. */
   --pistachio: color-mix(in oklab, var(--l1) 22%, #fbfdf5);
   /* Rounded, goopy display face for headings; Bricolage stays for body text. */

@@ -70,6 +70,6 @@ processes you started. `npm run dev` and `npm run preview` bind to loopback port
   and release approval.
 - CI validates only; it never deploys. Deployment steps and the release gate live in
   [docs/deployment.md](docs/deployment.md). Do not deploy publicly until a signed, notarized
-  `Slopometer.dmg` is attached to a public release of `ckbk456/slopometer`.
+  `Slopometer.dmg` is live at `https://updates.infinitex.vn/slopometer/Slopometer.dmg`.
 - Handoffs distinguish implemented, locally validated, CI passed, manually verified, PR open,
   merged and deployed. Never invent PR numbers or claim unrun checks.

@@ -3,37 +3,37 @@
 @property --l0 {
   syntax: "<color>";
   inherits: true;
-  initial-value: #dfe8cf;
+  initial-value: #d4e6fb;
 }
 @property --l1 {
   syntax: "<color>";
   inherits: true;
-  initial-value: #a9c3a4;
+  initial-value: #93c5fd;
 }
 @property --l2 {
   syntax: "<color>";
   inherits: true;
-  initial-value: #80a787;
+  initial-value: #3b82f6;
 }
 @property --l3 {
   syntax: "<color>";
   inherits: true;
-  initial-value: #4e8a5d;
+  initial-value: #4f46e5;
 }
 @property --l4 {
   syntax: "<color>";
   inherits: true;
-  initial-value: #116329;
+  initial-value: #3730a3;
 }
 @property --slop {
   syntax: "<color>";
   inherits: true;
-  initial-value: #116329;
+  initial-value: #3730a3;
 }
 @property --goo {
   syntax: "<color>";
   inherits: true;
-  initial-value: #7bc96f;
+  initial-value: #488dff;
 }
 
 /* Only after the first pick, so a saved preset does not animate in on load. */

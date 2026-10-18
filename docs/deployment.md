@@ -7,11 +7,12 @@ yet (as of 18 October 2026). CI only validates.
 
 ## Release gate
 
-Do not deploy publicly until a signed, notarized `Slopometer.dmg` is attached to the
-latest public release of `ckbk456/slopometer`. The download button points to
-`https://github.com/ckbk456/slopometer/releases/latest/download/Slopometer.dmg`, which 404s
-until then. The in-app updater is configured in the app repository; this site does not host
-an update feed.
+Do not deploy publicly until a signed, notarized `Slopometer.dmg` for the current release
+is live at `https://updates.infinitex.vn/slopometer/Slopometer.dmg`. The download button points there, and it 404s until the app's release
+job publishes it. That location belongs to the app: the same R2 bucket behind
+`updates.infinitex.vn` holds the Sparkle feed (`/slopometer/appcast.xml`) and update
+archives, so the download and the updater always come from one place (see the app's
+`docs/logic/updates.md`). This site hosts neither the DMG nor the feed.
 
 ## Target
 
@@ -36,7 +37,7 @@ Creating the project, attaching the domain and each deployment need explicit aut
 
 4. Verify the deployment URL, then the custom domain: HTTPS, page and assets load, a real
    404 for unknown paths, security headers and CSP from `public/_headers`, a clean console,
-   and that the download button fetches the DMG.
+   and that the download button fetches the DMG from `updates.infinitex.vn`.
 5. Record the deployment ID, URL and the exact Git commit in this file.
 
 ## Rollback

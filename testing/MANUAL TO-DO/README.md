@@ -5,8 +5,8 @@ does not cover any of these.
 
 ## Before the first public deployment
 
-- [ ] A signed, notarized `Slopometer.dmg` is on the latest public release of
-      `ckbk456/slopometer`, and the download button fetches it.
+- [ ] A signed, notarized `Slopometer.dmg` is live at `https://updates.infinitex.vn/slopometer/Slopometer.dmg`, and the
+      download button fetches it.
 - [ ] Owner approves the copy, the "by Infinitex" credit and the overall look.
 
 ## Page
@@ -23,8 +23,8 @@ does not cover any of these.
       and wider).
 - [ ] Layout at 2000, 1440, 1050, 768 and 390 px: centered within about 1240 px, no
       horizontal scroll at 390 px (the burst number is allowed to overflow on purpose).
-- [ ] Every color preset recolors the page with readable text, and the choice survives a
-      reload.
+- [ ] Slop Electric is the default on a first visit (no Slop Green preset), every color
+      preset recolors the page with readable text, and the choice survives a reload.
 - [ ] Illustrations still match the current app views (widget, charts, quota card, menu bar).
 - [ ] Reduced motion turns every animation off; touch devices get no cursor effects; the page
       stays readable with JavaScript disabled.

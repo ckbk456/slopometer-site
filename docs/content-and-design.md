@@ -13,11 +13,13 @@ not presented as an Infinitex commercial product or service. Decided by the owne
 - Display face: Fredoka Variable (weights 600–700, `--display`) for the wordmark, title,
   headings, marquee and card titles. Body: Bricolage Grotesque Variable. Both bundled from
   Fontsource at exact pinned versions (SIL OFL).
-- Default palette: pistachio page tint, eggplant ink `#2A1636`, paper `#FBFDF5`, slop green
-  `#116329` (the app's own activity color), goo `#7BC96F`, bubblegum `#FF8FB1`.
+- Default palette: the app's default preset, Slop Electric (levels `#93C5FD`, `#3B82F6`,
+  `#4F46E5`, `#3730A3`, accent `#3730A3`, goo `#488DFF`, empty `#D4E6FB`), on a tinted page
+  with eggplant ink `#2A1636`, paper `#FBFDF5`, and bubblegum `#FF8FB1`. Slop Green was
+  removed from the app and the site.
 - Every themable color comes from `--l0`..`--l4`, `--slop`, `--goo` and the derived
   `--pistachio`. `--gum`, `--ink`, `--paper` and `--muted` stay fixed. `src/theme.js`
-  overrides the themable ones from the app's 11 presets (`Sources/SlopometerCore/ThemePreset.swift`
+  overrides the themable ones from the app's 10 presets (`Sources/SlopometerCore/ThemePreset.swift`
   in the app repo), so the picker recolors the whole page. The choice is kept in
   `localStorage` under `slopometer-theme`.
 
@@ -69,9 +71,12 @@ effects need a fine pointer.
 - Visible copy is for end users only: no "Sample data" or "drag to scroll" captions. The
   sample-data disclosure lives in each illustration's `role="img"` accessible name.
 - Sample numbers are deliberately silly (42 today, 67 of 69 PRs).
-- Facts come from the app's SPEC: macOS 14 or later; username-only reads the public
-  profile calendar (not an official API); a read-only token adds PRs, private repos and the
-  daily quota and is kept in Keychain; the app talks only to GitHub.
+- Facts come from the app's SPEC: macOS 14 or later; free and MIT-licensed; username-only
+  reads the public profile calendar, which is not an official API and can break; a
+  fine-grained read-only token adds PRs, private repos, repository filters and the daily
+  quota, one token per organization, kept in Keychain. The page makes no network claim:
+  the app also checks `updates.infinitex.vn` for updates, so "talks only to GitHub" would
+  be false.
 - Display text, numbers and illustrations are `user-select: none`.
 
 ## Illustrations
