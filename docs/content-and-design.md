@@ -35,7 +35,10 @@ All effects are local CSS/JS, fit the CSP, stop under `prefers-reduced-motion`, 
 effects need a fine pointer.
 
 - Cursor-trailing blob, blurred on its own GPU layer and moved with `transform`.
-- Liquid title: a `::before` copy of the text in `--slop`, cut by a sloshing wave mask.
+- Liquid title: a `::before` copy of the text in `--slop`, cut by a two-layer mask (a sloshing
+  wave strip over a solid block) so the surface sits mid-way through the lowercase letters and
+  descenders such as the p's tail fill too. Avoid `container-type` on the hero column: it
+  clips the fill's descenders.
 - Sparkle gradient tagline with popping stars.
 - Download button that leans toward the pointer anywhere on the page (at most 16 × 10 px),
   with a splat on click.

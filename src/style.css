@@ -348,7 +348,6 @@ section {
 }
 .hero-copy {
   min-width: 0;
-  container-type: inline-size;
 }
 
 /* Liquid title: slop sloshes inside the stroked letters and rises on load.
@@ -357,9 +356,10 @@ section {
 .liquid {
   position: relative;
   isolation: isolate;
-  /* Sized to the hero column (about 5.2em wide) and never wrapped, so the
-     ::before fill copy lines up with the outline letter for letter. */
-  font-size: clamp(44px, 19cqi, 132px);
+  /* Sized so the ~5.1em-wide word fits its hero column and never wraps, so the
+     ::before fill copy lines up with the outline letter for letter. (Not container
+     units: a size container on the column clips the fill's descenders.) */
+  font-size: clamp(44px, 8.4vw, 120px);
   white-space: nowrap;
   font-weight: 700;
   line-height: 0.95;
@@ -370,14 +370,22 @@ section {
 .liquid::before {
   content: attr(data-text) / "";
   position: absolute;
-  inset: 0;
+  /* A little larger than the line box so the mask covers descenders (the p's tail)
+     and any overhang on the right. The text itself stays anchored top-left. */
+  inset: 0 -0.5em -0.35em 0;
   z-index: -1;
   color: var(--slop);
   -webkit-text-stroke: 0;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'%3E%3Cpath d='M0 30 Q50 0 100 30 T200 30 T300 30 T400 30 V600 H0Z'/%3E%3C/svg%3E")
-    0 0.12em / 2em 3em repeat-x;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'%3E%3Cpath d='M0 30 Q50 0 100 30 T200 30 T300 30 T400 30 V600 H0Z'/%3E%3C/svg%3E")
-    0 0.12em / 2em 3em repeat-x;
+  /* Two mask layers: a thin wave strip for the surface and a solid block below it,
+     so the fill reaches every descender regardless of the line box. */
+  -webkit-mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 60' preserveAspectRatio='none'%3E%3Cpath d='M0 30 Q50 0 100 30 T200 30 T300 30 T400 30 V60 H0Z'/%3E%3C/svg%3E")
+      0 0.42em / 2em 0.3em repeat-x,
+    linear-gradient(#000, #000) 0 0.71em / 100% 100% no-repeat;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 60' preserveAspectRatio='none'%3E%3Cpath d='M0 30 Q50 0 100 30 T200 30 T300 30 T400 30 V60 H0Z'/%3E%3C/svg%3E")
+      0 0.42em / 2em 0.3em repeat-x,
+    linear-gradient(#000, #000) 0 0.71em / 100% 100% no-repeat;
   animation:
     slosh 2.6s linear infinite,
     fill-up 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
@@ -385,14 +393,14 @@ section {
 }
 @keyframes slosh {
   to {
-    -webkit-mask-position-x: 2em;
-    mask-position-x: 2em;
+    -webkit-mask-position-x: 2em, 0;
+    mask-position-x: 2em, 0;
   }
 }
 @keyframes fill-up {
   from {
-    -webkit-mask-position-y: 0.95em;
-    mask-position-y: 0.95em;
+    -webkit-mask-position-y: 1.3em, 1.59em;
+    mask-position-y: 1.3em, 1.59em;
   }
 }
 .liquid::after {
