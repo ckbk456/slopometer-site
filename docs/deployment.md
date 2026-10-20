@@ -8,16 +8,33 @@ Direct Upload). CI only validates.
 | Date       | Deployment                                                                            | Site commit | App release |
 | ---------- | ------------------------------------------------------------------------------------- | ----------- | ----------- |
 | 2026-10-20 | `1571f76e-7fdf-4dc6-8710-0b85fb76ba0c` (`https://1571f76e.slopometer-site.pages.dev`) | `670ed85`   | 1.0.1       |
+| 2026-10-21 | `fcec3fb9-7782-4f5b-b2c5-6be1fae5351e` (`https://fcec3fb9.slopometer-site.pages.dev`) | `159b447`   | 1.0.3       |
+| 2026-10-21 | `a3db489b-e5c8-418c-a328-bad46198e868` (`https://a3db489b.slopometer-site.pages.dev`) | `25f2718`   | 1.0.4       |
 
 Verified after the first deployment: HTTPS on both URLs, page and assets load, unknown
 paths return 404, the `public/_headers` CSP and security headers are served, and the
 download button points at the live, notarized `Slopometer.dmg`.
 
+The 1.0.3 deployment was made from the unmerged `codex/versioned-dmg-link` commit at the
+owner's direction, to stop a cached 1.0.1 installer being served. Verified: both URLs
+return 200 with the CSP, unknown paths 404, and the button links to
+`Slopometer-1.0.3.dmg`, which returns 200 with the notarized 1.0.3 image. The 1.0.4 deployment, from the same branch, was verified the same way against
+`Slopometer-1.0.4.dmg`.
+
 ## Release gate
 
-Do not deploy publicly until a signed, notarized `Slopometer.dmg` for the current release
-is live at `https://updates.infinitex.vn/slopometer/Slopometer.dmg`. The download button points there, and it 404s until the app's release
-job publishes it. That location belongs to the app: the same R2 bucket behind
+Do not deploy publicly until the signed, notarized disk image for the release named in
+`tools/generate/build.mjs` is live at
+`https://updates.infinitex.vn/slopometer/Slopometer-<version>.dmg`. The download button
+points there, and it 404s until the app's release publishes it.
+
+The button links to a versioned file, never to a fixed "latest" name: every release gets a
+new URL, so a browser or proxy cannot serve an older installer from cache. The app's 1.0.2
+release exposed this when a browser kept handing out its cached 1.0.1 `Slopometer.dmg`
+after the file had been replaced. Each app release therefore needs a site release: bump
+`release` in `tools/generate/build.mjs`, run `npm run generate`, and deploy.
+
+That location belongs to the app: the same R2 bucket behind
 `updates.infinitex.vn` holds the Sparkle feed (`/slopometer/appcast.xml`) and update
 archives, so the download and the updater always come from one place (see the app's
 `docs/logic/updates.md`). This site hosts neither the DMG nor the feed.
@@ -34,7 +51,8 @@ Creating the project, attaching the domain and each deployment need explicit aut
 
 ## Release steps
 
-1. Confirm the release gate above, release authority, and a clean, merged `main`.
+1. Confirm the release gate above (`curl -I` the versioned DMG URL returns 200), release
+   authority, and a clean, merged `main`.
 2. `npm ci && npm run check` with the pinned Node version.
 3. Deploy `dist/` with pinned Wrangler (authenticate securely; never commit tokens):
 
@@ -45,7 +63,8 @@ Creating the project, attaching the domain and each deployment need explicit aut
 
 4. Verify the deployment URL, then the custom domain: HTTPS, page and assets load, a real
    404 for unknown paths, security headers and CSP from `public/_headers`, a clean console,
-   and that the download button fetches the DMG from `updates.infinitex.vn`.
+   and that the download button fetches `Slopometer-<version>.dmg` for the current release
+   from `updates.infinitex.vn`.
 5. Record the deployment ID, URL and the exact Git commit in this file.
 
 ## Rollback
