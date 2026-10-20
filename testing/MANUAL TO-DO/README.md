@@ -5,7 +5,8 @@ does not cover any of these.
 
 ## Before the first public deployment
 
-- [ ] A signed, notarized `Slopometer.dmg` is live at `https://updates.infinitex.vn/slopometer/Slopometer.dmg`, and the
+- [ ] A signed, notarized `Slopometer-<version>.dmg` for the release in
+      `tools/generate/build.mjs` is live at `https://updates.infinitex.vn/slopometer/`, and the
       download button fetches it.
 - [ ] Owner approves the copy, the "by Infinitex" credit and the overall look.
 

@@ -70,7 +70,8 @@ processes you started. `npm run dev` and `npm run preview` bind to loopback port
 - Human review owns copy, visual and effect acceptance, cross-browser behavior, accessibility
   and release approval.
 - CI validates only; it never deploys. Deployment steps and the release gate live in
-  [docs/deployment.md](docs/deployment.md). Do not deploy publicly until a signed, notarized
-  `Slopometer.dmg` is live at `https://updates.infinitex.vn/slopometer/Slopometer.dmg`.
+  [docs/deployment.md](docs/deployment.md). Do not deploy publicly until the signed, notarized
+  `Slopometer-<version>.dmg` named in `tools/generate/build.mjs` is live at
+  `https://updates.infinitex.vn/slopometer/`.
 - Handoffs distinguish implemented, locally validated, CI passed, manually verified, PR open,
   merged and deployed. Never invent PR numbers or claim unrun checks.
