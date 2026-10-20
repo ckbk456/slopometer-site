@@ -9,6 +9,7 @@ Direct Upload). CI only validates.
 | ---------- | ------------------------------------------------------------------------------------- | ----------- | ----------- |
 | 2026-10-20 | `1571f76e-7fdf-4dc6-8710-0b85fb76ba0c` (`https://1571f76e.slopometer-site.pages.dev`) | `670ed85`   | 1.0.1       |
 | 2026-10-21 | `fcec3fb9-7782-4f5b-b2c5-6be1fae5351e` (`https://fcec3fb9.slopometer-site.pages.dev`) | `159b447`   | 1.0.3       |
+| 2026-10-21 | `a3db489b-e5c8-418c-a328-bad46198e868` (`https://a3db489b.slopometer-site.pages.dev`) | `25f2718`   | 1.0.4       |
 
 Verified after the first deployment: HTTPS on both URLs, page and assets load, unknown
 paths return 404, the `public/_headers` CSP and security headers are served, and the
@@ -17,7 +18,8 @@ download button points at the live, notarized `Slopometer.dmg`.
 The 1.0.3 deployment was made from the unmerged `codex/versioned-dmg-link` commit at the
 owner's direction, to stop a cached 1.0.1 installer being served. Verified: both URLs
 return 200 with the CSP, unknown paths 404, and the button links to
-`Slopometer-1.0.3.dmg`, which returns 200 with the notarized 1.0.3 image.
+`Slopometer-1.0.3.dmg`, which returns 200 with the notarized 1.0.3 image. The 1.0.4 deployment, from the same branch, was verified the same way against
+`Slopometer-1.0.4.dmg`.
 
 ## Release gate
 
