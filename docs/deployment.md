@@ -2,8 +2,16 @@
 
 ## Current state
 
-Not deployed. No Cloudflare Pages project, DNS record or custom domain exists for this site
-yet (as of 18 October 2026). CI only validates.
+Live on `https://slopometer.infinitex.vn` (Cloudflare Pages project `slopometer-site`,
+Direct Upload). CI only validates.
+
+| Date       | Deployment                                                                            | Site commit | App release |
+| ---------- | ------------------------------------------------------------------------------------- | ----------- | ----------- |
+| 2026-10-20 | `1571f76e-7fdf-4dc6-8710-0b85fb76ba0c` (`https://1571f76e.slopometer-site.pages.dev`) | `670ed85`   | 1.0.1       |
+
+Verified after the first deployment: HTTPS on both URLs, page and assets load, unknown
+paths return 404, the `public/_headers` CSP and security headers are served, and the
+download button points at the live, notarized `Slopometer.dmg`.
 
 ## Release gate
 
@@ -18,7 +26,7 @@ archives, so the download and the updater always come from one place (see the ap
 
 - Host: Cloudflare Pages, Direct Upload (no Git integration, no Functions).
 - Account: the Infinitex Cloudflare account (`c9a7358c7ea70834588cfcefa86a0130`).
-- Proposed project name: `slopometer-site`, production branch label `main`.
+- Project: `slopometer-site`, production branch label `main`.
 - Domain: `slopometer.infinitex.vn` as a Pages custom domain in the existing `infinitex.vn`
   zone. Do not touch the apex `infinitex.vn` records or email routing.
 
