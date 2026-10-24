@@ -12,7 +12,7 @@ const output = here("../../index.html");
 
 // The download button links to this release's own disk image. Each release gets a new URL,
 // so no browser or proxy can hand out an older installer from cache. Bump on every release.
-const release = "1.0.5";
+const release = "1.0.6";
 const dmg = `Slopometer-${release}.dmg`;
 
 // Gauge ticks 0..69 on a 180° dial: 15 steps, labels at 0, 23, 46, 69.
