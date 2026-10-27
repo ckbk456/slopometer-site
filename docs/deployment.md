@@ -12,6 +12,7 @@ Direct Upload). CI only validates.
 | 2026-10-21 | `a3db489b-e5c8-418c-a328-bad46198e868` (`https://a3db489b.slopometer-site.pages.dev`) | `25f2718`   | 1.0.4       |
 | 2026-10-21 | `a96765e0-ab7b-4ca4-a5a4-6a304b8895cd` (`https://a96765e0.slopometer-site.pages.dev`) | `de34457`   | 1.0.5       |
 | 2026-10-24 | `1899d7d4-7d68-41ef-a156-ab380e05cd88` (`https://1899d7d4.slopometer-site.pages.dev`) | `e5e94fb`   | 1.0.6       |
+| 2026-10-27 | `bf3a9d07-64ef-4833-889c-2260bf07db11` (`https://bf3a9d07.slopometer-site.pages.dev`) | `6b4bab0`   | 1.0.6       |
 
 Verified after the first deployment: HTTPS on both URLs, page and assets load, unknown
 paths return 404, the `public/_headers` CSP and security headers are served, and the
@@ -25,6 +26,8 @@ return 200 with the CSP, unknown paths 404, and the button links to
 against `Slopometer-1.0.5.dmg`.
 The 1.0.6 deployment, from `codex/release-1-0-6`, was verified the same way against
 `Slopometer-1.0.6.dmg`.
+The 2026-10-27 fine-print copy deployment, from merged `main`, was verified the same way
+against `Slopometer-1.0.6.dmg`.
 
 ## Release gate
 
