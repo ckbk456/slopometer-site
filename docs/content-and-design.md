@@ -68,8 +68,8 @@ effects need a fine pointer.
 ## Copy rules
 
 - "Slop" is the joke. The page never claims AI-authorship or code-quality detection; the
-  fine print says plainly that it counts contributions and PRs, can't spot AI code, judges
-  nothing, ranks nobody and never writes to GitHub.
+  fine print commits to the bit and says only that it won't judge your code (owner's
+  decision, 27 October 2026).
 - Visible copy is for end users only: no "Sample data" or "drag to scroll" captions, and
   no sample-data wording in accessible names either (owner's decision, 19 October 2026).
   Illustrations are named for what they show.
